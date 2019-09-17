@@ -38,6 +38,8 @@
 </form>
 </div>
 
+<br/><a href="?uc=utilisateur&action=connexion">Déjà membre ? Connectez-vous ici !</a>
+
 
 
 

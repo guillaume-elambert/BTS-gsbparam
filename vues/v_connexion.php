@@ -1,7 +1,7 @@
 <div id="creationCommande">
 <form method="POST" action="?uc=utilisateur&action=connexion">
    <fieldset>
-     <legend>Inscription</legend>
+     <legend>Connexion</legend>
       <p>
          <label for="mail">mail* </label>
          <input id="mail" type="text"  name="mail" value="<?php echo $mail ?>" size ="90" maxlength="90" required>
@@ -17,6 +17,8 @@
      </fieldset>
 </form>
 </div>
+
+<br/><a href="?uc=utilisateur&action=inscription">Pas encore membre ? Inscrivez-vous ici !</a>
 
 
 

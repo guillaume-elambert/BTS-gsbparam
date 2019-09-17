@@ -9,7 +9,6 @@ switch($action){
 		if(isset($_SESSION['mail'])){
 			unset($_SESSION['mail']);
 			header("Location: ?uc=accueil");
-
 		} 
 		//Entrée : l'utilisateur vient d'envoyer des info de connexion via le formulaire
 		else if (isset($_REQUEST['mail']) && isset($_REQUEST['mdp'])) {
@@ -17,15 +16,22 @@ switch($action){
 			$resConnexion = $pdo->connexionUtilisateur($_REQUEST['mail'],$_REQUEST['mdp']);
 
 			//Entrée : la fonction connexionUtilisateur n'a pas retournée d'erreur
-			if($resConnexion == 1){
-				$_SESSION['mail']=$mail;
-			} else {
+			if(is_null($resConnexion[0])){
+				$_SESSION['mail']=$_REQUEST['mail'];
+				$message = "Vous êtes bien connectez !";
+				include("vues/v_message.php");
+				echo "<a href='?uc=accueil'>Vers l'accueil.</a>";
+
+			}
+			//Entrée : il y a eu une erreur lors de la connexion
+			else {
+				$msgErreurs = $resConnexion;
 				$mail = $_REQUEST['mail'];
 				include ("vues/v_erreurs.php");
-				include("vues/v_connexion");
+				include("vues/v_connexion.php");
 			}
 			
-
+		//Entrée : l'utilisateur viens d'arriver sur la page de connexion
 		} else {
 			$mail = '';
 			include("vues/v_connexion.php");
@@ -34,8 +40,12 @@ switch($action){
 	}
 
 	case 'inscription' : {
-		$nom =''; $prenom='';$rue='';$ville ='';$cp='';$mail='';
-		include("vues/v_inscription.php");
+		if(isset($_SESSION['mail'])){
+			$message = "Vous êtes connectez, pas besoin de vous inscrire.";
+   			include ("vues/v_message.php");
+		}
+			$nom =''; $prenom='';$rue='';$ville ='';$cp='';$mail='';
+			include("vues/v_inscription.php");
 		break;
 	}
 
@@ -51,7 +61,9 @@ switch($action){
 		{
 			$pdo->creerClient($mail,$_REQUEST['mdp'],$nom,$prenom,$rue,$cp,$ville);
 			$_SESSION['mail']=$mail;
-			header('Location: ?uc=gererPanier&action=passerCommande');
+			$message = "Vous êtes bien inscris et connectez. A l'avenir votre identifiant sera ".$mail." .";
+			include("vues/v_message.php");
+			echo "<a href='?uc=accueil'>Vers l'accueil.</a>";
 		}
 		break;
 	}

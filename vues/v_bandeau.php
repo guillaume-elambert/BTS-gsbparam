@@ -25,9 +25,14 @@
 					echo "(".sizeof($_SESSION['produits']).")";
 				}
 			}
+			else if (!isset($_GET['action'])){
+				echo "(".sizeof($_SESSION['produits']).")";
+			}
 		} else {
 			echo "(0)";
 		}
 		?>
 	</a></li>
+	
+	<li><a href="?uc=utilisateur&action=connexion" <?php if(isset($_SESSION['mail'])) echo 'title="'.$_SESSION['mail'].'" onclick=\'return confirm("Voulez-vous vraiment vous deconnecter ?");\'"> Se déconnecter'; else echo '> Se connecter';?></a></li>
 </ul>

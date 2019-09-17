@@ -175,7 +175,7 @@ class PdoGsbParam
 
 	public function creerClient($mail,$mdp,$nom,$prenom,$rue,$cp,$ville)
 	{
-		$pwd = password_hash( $_REQUEST['mdp'], PASSWORD_DEFAULT );
+		$pwd = password_hash( $mdp, PASSWORD_DEFAULT );
 		
 		$req = "INSERT INTO client (mel,mdp,nom,prenom,rue,cp,ville) VALUES ('$mail','$pwd','$nom','$prenom','$rue','$cp','$ville')";
 		$res = PdoGsbParam::$monPdo->exec($req);
@@ -197,7 +197,7 @@ class PdoGsbParam
 		if(isset($userInfo)){
 			return $userInfo;
 		} else {
-			return 0;
+			return 1;
 		}
 	}
 
@@ -207,8 +207,8 @@ class PdoGsbParam
 		$userInfo = $res->fetch();
 
 		if(isset($userInfo)){
-			if (password_verify($mdp,$userInfo['mel'])){
-				$lesErreurs[] = 0;
+			if (password_verify($mdp,$userInfo['mdp'])){
+				$lesErreurs[] = null;
 			} else {
 				$lesErreurs[] = 'Mot de passe incorrect !';
 			}
