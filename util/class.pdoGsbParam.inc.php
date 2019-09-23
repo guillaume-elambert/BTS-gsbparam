@@ -36,12 +36,12 @@ class PdoGsbParam
 		* nom de l'utilisateur utilisé pour la connexion 
 		* @var string $user
 		*/   		
-      	private static $user='root' ;   
+      	private static $user='visiteurSite';   
 		/**
 		* mdp de l'utilisateur utilisé pour la connexion 
 		* @var string $mdp
 		*/  		
-      	private static $mdp='' ;
+      	private static $mdp='a5UTXhjsMreUpAJU';
 		/**
 		* objet pdo de la classe Pdo pour la connexion 
 		* @var string $monPdo
@@ -203,7 +203,7 @@ class PdoGsbParam
 
 	public function connexionUtilisateur($mail, $mdp)
 	{
-		$res = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mel='".$mail."'");
+		$res = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mail='".$mail."'");
 		$userInfo = $res->fetch();
 
 		if(isset($userInfo)){

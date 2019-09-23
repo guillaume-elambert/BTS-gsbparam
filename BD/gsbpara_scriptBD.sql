@@ -1,3 +1,4 @@
+DROP DATABASE elambert_gsbparam;
 -- phpMyAdmin SQL Dump
 -- version 4.5.2
 -- http://www.phpmyadmin.net
@@ -19,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  elambert_gsbparam
 --
-CREATE DATABASE IF NOT EXISTS elambert_gsbparam DEFAULT CHARACTER SET latin1 COLLATE latin1_bin;
+CREATE DATABASE IF NOT EXISTS elambert_gsbparam DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 USE elambert_gsbparam;
 
 -- --------------------------------------------------------
@@ -30,11 +31,11 @@ USE elambert_gsbparam;
 
 DROP TABLE IF EXISTS administrateur;
 CREATE TABLE IF NOT EXISTS administrateur (
-  `id` char(3) COLLATE latin1_bin NOT NULL,
-  `nom` char(32) COLLATE latin1_bin NOT NULL,
-  `mdp` char(32) COLLATE latin1_bin NOT NULL,
+  `id` char(3) COLLATE utf8_bin NOT NULL,
+  `nom` char(32) COLLATE utf8_bin NOT NULL,
+  `mdp` char(32) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table administrateur
@@ -52,10 +53,10 @@ INSERT INTO administrateur (id, nom, mdp) VALUES
 
 DROP TABLE IF EXISTS categorie;
 CREATE TABLE IF NOT EXISTS categorie (
-  `id` char(32) COLLATE latin1_bin NOT NULL,
-  `libelle` char(32) COLLATE latin1_bin DEFAULT NULL,
+  `id` char(32) COLLATE utf8_bin NOT NULL,
+  `libelle` char(32) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table categorie
@@ -69,28 +70,51 @@ INSERT INTO categorie (id, libelle) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `client`
+--
+
+DROP TABLE IF EXISTS `client`;
+CREATE TABLE IF NOT EXISTS `client` (
+  `mail` varchar(90) COLLATE utf8_bin NOT NULL,
+  `mdp` varchar(255) COLLATE utf8_bin NOT NULL,
+  `nom` varchar(30) COLLATE utf8_bin DEFAULT NULL,
+  `prenom` varchar(30) COLLATE utf8_bin DEFAULT NULL,
+  `rue` varchar(60) COLLATE utf8_bin DEFAULT NULL,
+  `cp` char(5) COLLATE utf8_bin DEFAULT NULL,
+  `ville` varchar(60) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`mail`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `client`
+--
+
+INSERT INTO `client` (`mail`, `mdp`, `nom`, `prenom`, `rue`, `cp`, `ville`) VALUES
+('guillaume.elambert@yahoo.fr', '$2y$10$C099mWcA2WqRaQuLVCiH.OEQW5rJonwEn7RjxwYGkEWnHzY62cy3C', 'Elambert', 'Guillaume', '8 bis rue de Saint Benoit', '78610', 'Auffargis'),
+('dupont@wanadoo.fr', '$2y$10$C099mWcA2WqRaQuLVCiH.OEQW5rJonwEn7RjxwYGkEWnHzY62cy3C', 'Dupont', 'Jacques', '12, rue haute', '75001', 'Paris'),
+('durant@free.fr', '$2y$10$C099mWcA2WqRaQuLVCiH.OEQW5rJonwEn7RjxwYGkEWnHzY62cy3C', 'Durant', 'Yves', '23, rue des ombres', '75012', 'Paris');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table commande
 --
 
 DROP TABLE IF EXISTS commande;
 CREATE TABLE IF NOT EXISTS commande (
-  `id` char(32) COLLATE latin1_bin NOT NULL,
+  `id` char(32) COLLATE utf8_bin NOT NULL,
   `dateCommande` date DEFAULT NULL,
-  `nomPrenomClient` char(32) COLLATE latin1_bin DEFAULT NULL,
-  `adresseRueClient` char(32) COLLATE latin1_bin DEFAULT NULL,
-  `cpClient` char(5) COLLATE latin1_bin DEFAULT NULL,
-  `villeClient` char(32) COLLATE latin1_bin DEFAULT NULL,
-  `mailClient` char(50) COLLATE latin1_bin DEFAULT NULL,
+  `mailClient` varchar(90) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table commande
 --
 
-INSERT INTO commande (id, dateCommande, nomPrenomClient, adresseRueClient, cpClient, villeClient, mailClient) VALUES
-('1101461660', '2011-07-12', 'Dupont Jacques', '12, rue haute', '75001', 'Paris', 'dupont@wanadoo.fr'),
-('1101461665', '2011-07-20', 'Durant Yves', '23, rue des ombres', '75012', 'Paris', 'durant@free.fr');
+INSERT INTO commande (id, dateCommande, mailClient) VALUES
+('1101461660', '2011-07-12', 'dupont@wanadoo.fr'),
+('1101461665', '2011-07-20', 'durant@free.fr');
 
 -- --------------------------------------------------------
 
@@ -100,12 +124,12 @@ INSERT INTO commande (id, dateCommande, nomPrenomClient, adresseRueClient, cpCli
 
 DROP TABLE IF EXISTS contenir;
 CREATE TABLE IF NOT EXISTS contenir (
-  `idCommande` char(32) COLLATE latin1_bin NOT NULL,
-  `idProduit` char(32) COLLATE latin1_bin NOT NULL,
+  `idCommande` char(32) COLLATE utf8_bin NOT NULL,
+  `idProduit` char(32) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`idCommande`,`idProduit`),
   KEY `I_FK_CONTENIR_COMMANDE` (`idCommande`),
   KEY `I_FK_CONTENIR_Produit` (`idProduit`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table contenir
@@ -125,14 +149,14 @@ INSERT INTO contenir (idCommande, idProduit) VALUES
 
 DROP TABLE IF EXISTS produit;
 CREATE TABLE IF NOT EXISTS produit (
-  `id` char(32) COLLATE latin1_bin NOT NULL,
-  `description` char(50) COLLATE latin1_bin DEFAULT NULL,
+  `id` char(32) COLLATE utf8_bin NOT NULL,
+  `description` char(50) COLLATE utf8_bin DEFAULT NULL,
   `prix` decimal(10,2) DEFAULT NULL,
-  `image` char(100) COLLATE latin1_bin DEFAULT NULL,
-  `idCategorie` char(32) COLLATE latin1_bin NOT NULL,
+  `image` char(100) COLLATE utf8_bin DEFAULT NULL,
+  `idCategorie` char(32) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`),
   KEY `I_FK_Produit_CATEGORIE` (`idCategorie`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Contenu de la table produit
@@ -177,6 +201,18 @@ ALTER TABLE contenir
 --
 ALTER TABLE produit
   ADD CONSTRAINT `produit_ibfk_1` FOREIGN KEY (`idCategorie`) REFERENCES categorie (`id`);
+
+
+--
+-- Contraintes pour la table Commande
+--
+ALTER TABLE commande
+  ADD CONSTRAINT `FK_client_commande_mail` FOREIGN KEY (`mailClient`) REFERENCES client (`mail`);
+
+
+DROP USER IF EXISTS 'visiteurSite'@'localhost';
+CREATE USER 'visiteurSite'@'localhost' IDENTIFIED BY 'a5UTXhjsMreUpAJU';
+GRANT ALL PRIVILEGES ON `elambert_gsbparam`.* TO 'visiteurSite'@'localhost';
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
