@@ -42,15 +42,15 @@ function supprimerPanier()
 */
 function ajouterAuPanier($idProduit)
 {
-	
+	//var_dump(array_keys($_SESSION['produits'],$idProduit));
 	$ok = true;
-	if(in_array($idProduit,$_SESSION['produits']))
+	if(isset($_SESSION['produits'][$idProduit]))/*in_array($idProduit,$_SESSION['produits'])*/
 	{
-		$ok = false;
+		$_SESSION['produits'][$idProduit]++;
 	}
 	else
 	{
-		$_SESSION['produits'][]= $idProduit; // l'indice n'est pas précisé : il sera automatiquement celui qui suit le dernier occupé
+		$_SESSION['produits'][$idProduit]=1;
 	}
 	return $ok;
 }
@@ -63,7 +63,7 @@ function ajouterAuPanier($idProduit)
 */
 function getLesIdProduitsDuPanier()
 {
-	return $_SESSION['produits'];
+	return array_keys($_SESSION['produits']);
 
 }
 /**
