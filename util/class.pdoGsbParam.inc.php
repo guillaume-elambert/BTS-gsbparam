@@ -154,7 +154,7 @@ class PdoGsbParam
 	 * @param array $lesIdProduit tableau associatif contenant les id des produits commandés
 	 
 	*/
-	public function creerCommande($nom, $prenom, $rue,$cp,$ville,$mail, $lesIdProduit )
+	public function creerCommande($nom, $prenom, $rue,$cp,$ville,$mail, $lesIdProduit, $qteProduit )
 	{
 		// on récupère le dernier id de commande
 		$req = 'select max(id) as maxi from commande';
@@ -163,14 +163,19 @@ class PdoGsbParam
 		$maxi = $laLigne['maxi'] ;// on place le dernier id de commande dans $maxi
 		$idCommande = $maxi+1; // on augmente le dernier id de commande de 1 pour avoir le nouvel idCommande
 		$date = date('Y/m/d'); // récupération de la date système
-		$req = "insert into commande values ('$idCommande','$date','$nom','$rue','$cp','$ville','$mail')";
-		$res = PdoGsbParam::$monPdo->exec($req);
-		// insertion produits commandés
+		
+		$lesRequetes = "insert into commande values ('$idCommande','$date','$mail');";
+		$parcoursIndiceArrayQte=0;
+		
+		// insertion produits commandés avvec leur qte
 		foreach($lesIdProduit as $unIdProduit)
 		{
-			$req = "insert into contenir values ('$idCommande','$unIdProduit')";
-			$res = PdoGsbParam::$monPdo->exec($req);
+			$lesRequetes .= "insert into contenir values ('$idCommande','$unIdProduit', $qteProduit[$parcoursIndiceArrayQte]);";
+			
+			$parcoursIndiceArrayQte++;
 		}
+		//var_dump($lesRequetes);
+		return PdoGsbParam::$monPdo->exec($lesRequetes);;
 	}
 
 	public function creerClient($mail,$mdp,$nom,$prenom,$rue,$cp,$ville)
@@ -191,7 +196,7 @@ class PdoGsbParam
 
 	public function getInfoClient($mail)
 	{
-		$res = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mel = '".$mail."'");
+		$res = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mail = '".$mail."'");
 		$userInfo = $res->fetch();
 
 		if(isset($userInfo)){

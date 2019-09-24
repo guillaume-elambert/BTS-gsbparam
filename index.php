@@ -4,8 +4,14 @@ include("vues/v_entete.php") ;
 require_once("util/fonctions.inc.php");
 require_once("util/class.pdoGsbParam.inc.php");
 include("vues/v_bandeau.php");
-//unset($_SESSION['produits']);
-//var_dump($_SESSION['produits']);
+/*unset($_SESSION['produits']);
+var_dump($_SESSION['produits']);
+var_dump(getLesIdProduitsDuPanier());
+var_dump($_SESSION['produits']);
+foreach ($_SESSION['produits'] as $unProduit) {
+	$array[]=$unProduit;
+}
+var_dump($array);*/
 if(!isset($_REQUEST['uc']))
     $uc = 'accueil'; // si $_GET['uc'] n'existe pas , $uc reçoit une valeur par défaut
 else

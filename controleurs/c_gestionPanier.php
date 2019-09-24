@@ -57,7 +57,7 @@ switch($action)
 					$rue 	= $userInfo['rue'];
 					$ville 	= $userInfo['ville'];
 					$cp		= $userInfo['cp'];
-					$mail = $userInfo['mel'];
+					$mail = $userInfo['mail'];
 				} else {
 					$nom =''; $prenom='';$rue='';$ville ='';$cp='';$mail='';
 				}
@@ -89,10 +89,10 @@ switch($action)
 		else
 		{
 			$lesIdProduit = getLesIdProduitsDuPanier();
-			
-			$pdo->creerCommande($nom, $prenom, $rue,$cp,$ville,$mail, $lesIdProduit );
+			$qteProduit = getLesQteProduitsDuPanier();
+			var_dump($pdo->creerCommande($nom, $prenom, $rue,$cp,$ville,$mail, $lesIdProduit, $qteProduit ));
 			$message = "Commande enregistrée";
-			supprimerPanier();
+			//supprimerPanier();
 			include ("vues/v_message.php");
 		}
 		break;

@@ -55,10 +55,7 @@ function ajouterAuPanier($idProduit)
 	return $ok;
 }
 /**
- * Retourne les produits du panier
- *
  * Retourne le tableau des identifiants de produit
- 
  * @return array $_SESSION['produits'] le tableau des id produits du panier 
 */
 function getLesIdProduitsDuPanier()
@@ -66,6 +63,21 @@ function getLesIdProduitsDuPanier()
 	return array_keys($_SESSION['produits']);
 
 }
+
+/**
+ * Retourne la quantité des produits du panier
+ * @return array $_SESSION['produits'] le tableau des id produits du panier 
+*/
+function getLesQteProduitsDuPanier()
+{
+	$array;
+	foreach ($_SESSION['produits'] as $unProduit) {
+		$array[]=$unProduit;
+	}
+	return $array;
+
+}
+
 /**
  * Retourne le nombre de produits du panier
  *
