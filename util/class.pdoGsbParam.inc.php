@@ -174,7 +174,7 @@ class PdoGsbParam
 			
 			$parcoursIndiceArrayQte++;
 		}
-		//var_dump($lesRequetes);
+		
 		return PdoGsbParam::$monPdo->exec($lesRequetes);;
 	}
 

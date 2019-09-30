@@ -156,3 +156,9 @@ div.imgCard{
     position:absolute;
     bottom:5px;
 }
+div.quantite{
+	text-align:center;
+	position:absolute;
+    bottom:15px;
+    left: 90px;
+}

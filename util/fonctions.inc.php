@@ -106,8 +106,12 @@ function nbProduitsDuPanier()
 */
 function retirerDuPanier($idProduit)
 {
-	$index =array_search($idProduit,$_SESSION['produits']);
-	unset($_SESSION['produits'][$index]);
+	if($_SESSION['produits'][$idProduit]>1){
+		$_SESSION['produits'][$idProduit]--;
+	}
+	else {
+		unset($_SESSION['produits'][$idProduit]);
+	}
 }
 /**
  * teste si une chaîne a un format de code postal

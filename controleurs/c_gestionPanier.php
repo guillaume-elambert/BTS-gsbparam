@@ -90,9 +90,9 @@ switch($action)
 		{
 			$lesIdProduit = getLesIdProduitsDuPanier();
 			$qteProduit = getLesQteProduitsDuPanier();
-			var_dump($pdo->creerCommande($nom, $prenom, $rue,$cp,$ville,$mail, $lesIdProduit, $qteProduit ));
+			$pdo->creerCommande($nom, $prenom, $rue,$cp,$ville,$mail, $lesIdProduit, $qteProduit );
 			$message = "Commande enregistrée";
-			//supprimerPanier();
+			supprimerPanier();
 			include ("vues/v_message.php");
 		}
 		break;

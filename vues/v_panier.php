@@ -15,6 +15,7 @@ foreach( $lesProduitsDuPanier as $unProduit)
 			<div class="photoCard"><img src="<?php echo $image ?>" alt="image descriptive" /></div>
 	<div class="descrCard"><?php echo	$description;?>	</div>
 	<div class="prixCard"><?php echo $prix."€" ?></div>
+	<div class="quantite">Quantité : <?php echo $_SESSION['produits'][$id]?></div>
 	<div class="imgCard"><a href="index.php?uc=gererPanier&produit=<?php echo $id ?>&action=supprimerUnProduit" onclick="return confirm('Voulez-vous vraiment retirer cet article ?');">
 	<img src="images/retirerpanier.png" title="Retirer du panier" alt="retirer du panier"></a></div>
 	</div>
