@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 07 Juin 2018 à 10:57
--- Version du serveur :  5.7.9
--- Version de PHP :  5.6.15
+-- Généré le :  Lun 07 Octobre 2019 à 08:20
+-- Version du serveur :  5.7.9-log
+-- Version de PHP :  7.0.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,10 +17,8 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  elambert_gsbparam
+-- Base de données :  `elambert_gsbparam`
 --
-CREATE DATABASE IF NOT EXISTS elambert_gsbparam DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-USE elambert_gsbparam;
 
 -- --------------------------------------------------------
 
@@ -30,19 +28,18 @@ USE elambert_gsbparam;
 
 DROP TABLE IF EXISTS `administrateur`;
 CREATE TABLE IF NOT EXISTS `administrateur` (
-  `id` char(3) COLLATE utf8_bin NOT NULL,
-  `nom` char(32) COLLATE utf8_bin NOT NULL,
-  `mdp` char(32) COLLATE utf8_bin NOT NULL,
+  `id` char(3) COLLATE latin1_bin NOT NULL,
+  `nom` char(32) COLLATE latin1_bin NOT NULL,
+  `mdp` char(32) COLLATE latin1_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 --
 -- Contenu de la table `administrateur`
 --
 
 INSERT INTO `administrateur` (`id`, `nom`, `mdp`) VALUES
-('1', 'LeBoss', 'TheBest!'),
-('2', 'LeChefProjet', 'NearlyTheBest!');
+('1', 'root', 'root');
 
 -- --------------------------------------------------------
 
@@ -114,7 +111,8 @@ CREATE TABLE IF NOT EXISTS `commande` (
 
 INSERT INTO `commande` (`id`, `dateCommande`, `mailClient`) VALUES
 ('1101461660', '2011-07-12', 'dupont@wanadoo.fr'),
-('1101461665', '2011-07-20', 'durant@free.fr');
+('1101461665', '2011-07-20', 'durant@free.fr'),
+('1101461666', '2019-09-24', 'guillaume.elambert@yahoo.fr');
 
 -- --------------------------------------------------------
 
@@ -137,10 +135,28 @@ CREATE TABLE IF NOT EXISTS `contenir` (
 --
 
 INSERT INTO `contenir` (`idCommande`, `idProduit`, `qte`) VALUES
-('1101461660', 'f03', 0),
-('1101461660', 'p01', 0),
-('1101461665', 'f05', 0),
-('1101461665', 'p06', 0);
+('1101461660', 'f03', 1),
+('1101461660', 'p01', 1),
+('1101461665', 'f05', 1),
+('1101461665', 'p06', 1),
+('1101461666', 'c01', 2),
+('1101461666', 'c02', 5),
+('1101461666', 'c04', 9);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `panier_client`
+--
+
+DROP TABLE IF EXISTS `panier_client`;
+CREATE TABLE IF NOT EXISTS `panier_client` (
+  `mailClient` varchar(90) COLLATE utf8_bin NOT NULL,
+  `produit` char(32) COLLATE utf8_bin NOT NULL,
+  `qte` int(11) NOT NULL,
+  PRIMARY KEY (`produit`),
+  KEY `FK_client_panierClient_mailClient` (`mailClient`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -212,6 +228,7 @@ ALTER TABLE `produit`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
 
 DROP USER IF EXISTS 'visiteurSite'@'localhost';
 CREATE USER 'visiteurSite'@'localhost' IDENTIFIED BY 'a5UTXhjsMreUpAJU';

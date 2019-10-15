@@ -18,7 +18,7 @@ function initPanier()
 {
 	if(!isset($_SESSION['produits']))
 	{
-		$_SESSION['produits']= array();
+		$_SESSION['produits'] = array();
 	}
 }
 /**
@@ -52,6 +52,7 @@ function ajouterAuPanier($idProduit)
 	{
 		$_SESSION['produits'][$idProduit]=1;
 	}
+
 	return $ok;
 }
 /**
@@ -88,12 +89,30 @@ function getLesQteProduitsDuPanier()
 */
 function nbProduitsDuPanier()
 {
-	$n = 0;
-	if(isset($_SESSION['produits']))
-	{
-	$n = count($_SESSION['produits']);
+	$totProduits = 0;
+	if (isset($_SESSION['produits']) && sizeof($_SESSION['produits']) > 0){
+		
+		/*Somme des quantités des produits*/
+		foreach ($_SESSION['produits'] as $unProduit) {
+			$totProduits += $unProduit;
+		}
+
+		if(isset($_GET['action'])) {
+			/*Si l'utilisateur vient de supprimer un produit de son panier*/
+			if ( $_GET['action']!='viderPanier'){
+				if($_GET['action']=='supprimerUnProduit'){
+					if ($totProduits-1 > 0){
+						$totProduits-=1;
+					}
+				}
+			} else {
+				$totProduits=0;
+			}
+		}
 	}
-	return $n;
+	
+	return $totProduits;
+	
 }
 /**
  * Retire un de produits du panier

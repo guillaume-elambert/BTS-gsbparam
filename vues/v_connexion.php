@@ -19,8 +19,3 @@
 </div>
 
 <br/><a href="?uc=utilisateur&action=inscription">Pas encore membre ? Inscrivez-vous ici !</a>
-
-
-
-
-

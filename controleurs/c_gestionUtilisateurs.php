@@ -8,12 +8,22 @@ switch($action){
 		//Entrée : l'utilisateur est déjà connecté
 		if(isset($_SESSION['mail'])){
 			unset($_SESSION['mail']);
+
+			if(isset($_SESSION['admin'])){
+				unset($_SESSION['admin']);
+			}
+			
 			header("Location: ?uc=accueil");
 		} 
 		//Entrée : l'utilisateur vient d'envoyer des info de connexion via le formulaire
 		else if (isset($_REQUEST['mail']) && isset($_REQUEST['mdp'])) {
 			
 			$resConnexion = $pdo->connexionUtilisateur($_REQUEST['mail'],$_REQUEST['mdp']);
+			
+			if( isset($_SESSION['admin'])){
+				$pdo->getPanierClient($_REQUEST['mail']);
+				$pdo->setPanierClient($_REQUEST['mail']);
+			}
 
 			//Entrée : la fonction connexionUtilisateur n'a pas retournée d'erreur
 			if(is_null($resConnexion[0])){
@@ -21,7 +31,6 @@ switch($action){
 				$message = "Vous êtes bien connectez !";
 				include("vues/v_message.php");
 				echo "<a href='?uc=accueil'>Vers l'accueil.</a>";
-
 			}
 			//Entrée : il y a eu une erreur lors de la connexion
 			else {
@@ -43,9 +52,10 @@ switch($action){
 		if(isset($_SESSION['mail'])){
 			$message = "Vous êtes connectez, pas besoin de vous inscrire.";
    			include ("vues/v_message.php");
-		}
+		} else {
 			$nom =''; $prenom='';$rue='';$ville ='';$cp='';$mail='';
 			include("vues/v_inscription.php");
+		}
 		break;
 	}
 

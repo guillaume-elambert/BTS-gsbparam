@@ -20,35 +20,37 @@
 * @author M. Jouin
 */
 
-class PdoGsbParam
-{   	
-		/**
-		* type et nom du serveur de bdd
-		* @var string $serveur
-		*/
-      	private static $serveur='mysql:host=localhost';
-		/**
-		* nom de la BD 
-		* @var string $bdd
-		*/
-      	private static $bdd='dbname=elambert_gsbparam';
-		/**
-		* nom de l'utilisateur utilisé pour la connexion 
-		* @var string $user
-		*/   		
-      	private static $user='visiteurSite';   
-		/**
-		* mdp de l'utilisateur utilisé pour la connexion 
-		* @var string $mdp
-		*/  		
-      	private static $mdp='a5UTXhjsMreUpAJU';
-		/**
-		* objet pdo de la classe Pdo pour la connexion 
-		* @var string $monPdo
-		*/ 		
-		private static $monPdo=null;
-		
-			private static $monPdoGsbParam = null;
+class PdoGsbParam {
+
+	/**
+	* type et nom du serveur de bdd
+	* @var string $serveur
+	*/
+  	private static $serveur='mysql:host=localhost';
+	/**
+	* nom de la BD 
+	* @var string $bdd
+	*/
+  	private static $bdd='dbname=elambert_gsbparam';
+	/**
+	* nom de l'utilisateur utilisé pour la connexion 
+	* @var string $user
+	*/   		
+  	private static $user='visiteurSite';   
+	/**
+	* mdp de l'utilisateur utilisé pour la connexion 
+	* @var string $mdp
+	*/  		
+  	private static $mdp='a5UTXhjsMreUpAJU';
+	/**
+	* objet pdo de la classe Pdo pour la connexion 
+	* @var string $monPdo
+	*/ 		
+	private static $monPdo=null;
+	
+	private static $monPdoGsbParam = null;
+	
+
 	/**
 	 * Constructeur privé, crée l'instance de PDO qui sera sollicitée
 	 * pour toutes les méthodes de la classe
@@ -58,12 +60,16 @@ class PdoGsbParam
     		PdoGsbParam::$monPdo = new PDO(PdoGsbParam::$serveur.';'.PdoGsbParam::$bdd, PdoGsbParam::$user, PdoGsbParam::$mdp); 
 			PdoGsbParam::$monPdo->query('SET CHARACTER SET utf8');
 	}
+
+
 	/**
     * destructeur
     */
 	public function _destruct(){
 		PdoGsbParam::$monPdo = null;
 	}
+
+
 	/**
 	 * Fonction statique qui crée l'unique instance de la classe
 	 *
@@ -78,6 +84,8 @@ class PdoGsbParam
 		}
 		return PdoGsbParam::$monPdoGsbParam;  
 	}
+
+
 	/**
 	 * Retourne toutes les catégories sous forme d'un tableau associatif
 	 *
@@ -90,6 +98,8 @@ class PdoGsbParam
 		$lesLignes = $res->fetchAll();
 		return $lesLignes;
 	}
+
+
 	/**
 	 * Retourne toutes les informations d'une catégorie passée en paramètre
 	 *
@@ -103,14 +113,15 @@ class PdoGsbParam
 		$laLigne = $res->fetch();
 		return $laLigne;
 	}
-/**
- * Retourne sous forme d'un tableau associatif tous les produits de la
- * catégorie passée en argument
- * 
- * @param string $idCategorie  l'id de la catégorie dont on veut les produits
- * @return array $lesLignes un tableau associatif  contenant les produits de la categ passée en paramètre
-*/
 
+
+	/**
+	 * Retourne sous forme d'un tableau associatif tous les produits de la
+	 * catégorie passée en argument
+	 * 
+	 * @param string $idCategorie  l'id de la catégorie dont on veut les produits
+	 * @return array $lesLignes un tableau associatif  contenant les produits de la categ passée en paramètre
+	*/
 	public function getLesProduitsDeCategorie($idCategorie)
 	{
 	    $req='select * from produit where idCategorie ="'.$idCategorie.'"';
@@ -118,14 +129,15 @@ class PdoGsbParam
 		$lesLignes = $res->fetchAll();
 		return $lesLignes; 
 	}
-/**
- * Retourne les produits concernés par le tableau des idProduits passée en argument
- *
- * @param array $desIdProduit tableau d'idProduits
- * @return array $lesProduits un tableau associatif contenant les infos des produits dont les id ont été passé en paramètre
-*/
-	public function getLesProduitsDuTableau($desIdProduit)
-	{
+
+
+	/**
+	 * Retourne les produits concernés par le tableau des idProduits passée en argument
+	 *
+	 * @param array $desIdProduit tableau d'idProduits
+	 * @return array $lesProduits un tableau associatif contenant les infos des produits dont les id ont été passé en paramètre
+	*/
+	public function getLesProduitsDuTableau($desIdProduit) {
 		$nbProduits = count($desIdProduit);
 		$lesProduits=array();
 		if($nbProduits != 0)
@@ -140,6 +152,21 @@ class PdoGsbParam
 		}
 		return $lesProduits;
 	}
+
+
+	/**
+	* Retourne le produit concerné par l'id du produit passé en paramètre
+	*
+	* @param string $idProduit l'identifiant du produit
+	* @return array $laLigne les informations du produit
+	*/
+	public function getUnProduit($idProduit) {
+	    $req="SELECT * FROM produit WHERE id='$idProduit';";
+		$res = PdoGsbParam::$monPdo->query($req);
+		$laLigne = $res->fetch();
+		return $laLigne; 
+	}
+
 	/**
 	 * Crée une commande 
 	 *
@@ -151,8 +178,7 @@ class PdoGsbParam
 	 * @param string $cp cp du client
 	 * @param string $ville ville du client
 	 * @param string $mail mail du client
-	 * @param array $lesIdProduit tableau associatif contenant les id des produits commandés
-	 
+	 * @param array $lesIdProduit tableau associatif contenant les id des produits commandés 
 	*/
 	public function creerCommande($nom, $prenom, $rue,$cp,$ville,$mail, $lesIdProduit, $qteProduit )
 	{
@@ -164,10 +190,10 @@ class PdoGsbParam
 		$idCommande = $maxi+1; // on augmente le dernier id de commande de 1 pour avoir le nouvel idCommande
 		$date = date('Y/m/d'); // récupération de la date système
 		
-		$lesRequetes = "insert into commande values ('$idCommande','$date','$mail');";
+		$lesRequetes = "insert into commande values ('$idCommande','$date','$mail','$nom', '$prenom','$rue','$cp','$ville');";
 		$parcoursIndiceArrayQte=0;
 		
-		// insertion produits commandés avvec leur qte
+		// insertion produits commandés avec leur qte
 		foreach($lesIdProduit as $unIdProduit)
 		{
 			$lesRequetes .= "insert into contenir values ('$idCommande','$unIdProduit', $qteProduit[$parcoursIndiceArrayQte]);";
@@ -175,9 +201,20 @@ class PdoGsbParam
 			$parcoursIndiceArrayQte++;
 		}
 		
-		return PdoGsbParam::$monPdo->exec($lesRequetes);;
+		return PdoGsbParam::$monPdo->exec($lesRequetes);
 	}
 
+	/**
+	* Créé un client avec un mail, mot de passe, nom & prenom et une adresse (décomposée)
+	*
+	* @param string $mail mail du client
+	* @param string $mdp mot de passe du client
+	* @param string $nom nom du client
+	* @param string $prenom prénom du client
+	* @param string $rue rue du client
+	* @param string $cp cp du client
+	* @param string $ville ville du client
+	*/
 	public function creerClient($mail,$mdp,$nom,$prenom,$rue,$cp,$ville)
 	{
 		$pwd = password_hash( $mdp, PASSWORD_DEFAULT );
@@ -186,17 +223,24 @@ class PdoGsbParam
 		$res = PdoGsbParam::$monPdo->exec($req);
 	}
 
-	public function getClient($mail)
+	/*public function getClient($mail)
 	{
 		$req = "SELECT * FROM client WHERE mail = '$mail'";
 		$res = PdoGsbParam::$monPdo->exec($req);
 		$leClient = $res->fetch();
 		$nom = $leClient['nom']; $prenom = $leClient['prenom']; $rue = $leClient['rue']; $cp = $leClient['cp']; $ville = $leClient['ville']; $mail = $leClient['mel']; 
-	}
+	}*/
 
+
+	/**
+	* Retourne les informations d'un client
+	*
+	* @param string $mail le mail du client souhaité
+	* @return array $userInfo les informations du client
+	*/
 	public function getInfoClient($mail)
 	{
-		$res = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mail = '".$mail."'");
+		$res = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mail = '$mail'");
 		$userInfo = $res->fetch();
 
 		if(isset($userInfo)){
@@ -206,21 +250,126 @@ class PdoGsbParam
 		}
 	}
 
+	/**
+	* Connecte un utilisateur au site
+	*
+	* @param string $mail le mail de l'utilisateur
+	* @param string $mdp le mot de passe de l'utilisateur
+	* @return array $lesErreurs l'ensemble des potentielles erreurs lors de la connexion
+	*/
 	public function connexionUtilisateur($mail, $mdp)
 	{
-		$res = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mail='".$mail."'");
+		$res = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mail='$mail';");
 		$userInfo = $res->fetch();
+		
+		$res2 = PdoGsbParam::$monPdo->query("SELECT * FROM administrateur WHERE nom='$mail';");
+		$userInfo2 = $res2->fetch();
 
-		if(isset($userInfo)){
-			if (password_verify($mdp,$userInfo['mdp'])){
+		if($userInfo || $userInfo2){
+
+			if($userInfo){
+				$mdpBDD = $userInfo['mdp'];
+			} else {
+				$mdpBDD = $userInfo2['mdp'];
+			}
+
+			if (password_verify($mdp, $mdpBDD)){
 				$lesErreurs[] = null;
+				if($userInfo2){
+					$_SESSION['admin']=true;
+				}
 			} else {
 				$lesErreurs[] = 'Mot de passe incorrect !';
 			}
+
 		} else {
 			$lesErreurs[] = 'Mel incorrect !';
 		}
 		return $lesErreurs;
+	}
+
+	public function getPanierClient($mail)
+	{
+		$res = PdoGsbParam::$monPdo->query("SELECT * FROM panier_client WHERE mailClient = '$mail'");
+		if($res){
+			$panier_client = $res->fetchAll();
+
+			if(!isset($_SESSION['produits'])) {
+				initPanier();
+			}
+
+			foreach ($panier_client as $uneLigne) {
+				//Si l'utilisateur a mit ce produit dans son panier sans être connecté on cumule le panier stocké dans bdd et panier local
+				//Sinon on initialise la panier avec les données de la bdd
+				if(isset($_SESSION['produits'][$uneLigne['produit']])){
+					$_SESSION['produits'][$uneLigne['produit']]+=$uneLigne['qte'];
+				} else {
+					$_SESSION['produits'][$uneLigne['produit']]=$uneLigne['qte'];
+				}
+			}
+		}
+	}
+
+	public function setPanierClient($mail)
+	{
+		$lesProduits = getLesIdProduitsDuPanier();
+		if( !empty($lesProduits) ) {
+			$res = PdoGsbParam::$monPdo->exec("DELETE FROM panier_client WHERE mailClient = '$mail'");
+			
+			$ch='';
+			$i=0;
+			
+			foreach (getLesIdProduitsDuPanier() as $unProduit) {
+				$qte = getLesQteProduitsDuPanier()[$i];
+				$ch .="INSERT INTO panier_client (mailClient, produit, qte) VALUES ('$mail', '$unProduit',$qte);";
+				$i++;
+			}
+			$res = PdoGsbParam::$monPdo->exec($ch);
+		}
+	}
+
+	public function retirerDuPanier($idProduit){
+		$mail = $_SESSION['mail'];
+		$req = PdoGsbParam::$monPdo->query("SELECT qte FROM panier_client WHERE mailClient = '$mail' AND produit = '$idProduit'");
+		
+		$res = $req->fetch();
+		if($res) {
+			$res = PdoGsbParam::$monPdo->exec("UPDATE panier_client SET qte = (qte - 1) WHERE mailClient = '$mail' AND produit = '$idProduit'");
+		} else {
+			$res = PdoGsbParam::$monPdo->exec("INSERT INTO panier_client (mailClient, produit, qte) VALUES ('$mail', '$idProduit',1)");
+		}
+	}
+
+	public function viderPanier(){
+		$mail = $_SESSION['mail'];
+		$res = PdoGsbParam::$monPdo->exec("DELETE FROM panier_client WHERE mailClient = '$mail'");
+	}
+
+	public function ajouterAuPanier($idProduit){
+		$mail = $_SESSION['mail'];
+		$req = PdoGsbParam::$monPdo->query("SELECT qte FROM panier_client WHERE mailClient = '$mail' AND produit = '$idProduit'");
+		
+		$res = $req->fetch();
+		if($res) {
+			$res = PdoGsbParam::$monPdo->exec("UPDATE panier_client SET qte = (qte + 1) WHERE mailClient = '$mail' AND produit = '$idProduit'");
+		} else {
+			$res = PdoGsbParam::$monPdo->exec("INSERT INTO panier_client (mailClient, produit, qte) VALUES ('$mail', '$idProduit',1)");
+		}
+	}
+
+
+	/**
+	* Modifier les infos d'un produit & retourne un booleen qui témoigne de la bonne execution ou non
+	*
+	* @param $idProduit identifiant du produit à modifier
+	* @param $descProduit nouvelle description du produit
+	* @param $prixProduit nouveau prix du produit
+	* @param $categorieProduit nouvelle catégorie du produit
+	* @return boolean resultat de l'execution
+	*/
+	public function modifProduit($idProduit, $descProduit, $prixProduit, $categorieProduit){
+		var_dump("UPDATE produit SET description='$descProduit', prix='$prixProduit', idCategorie='$categorieProduit'");
+		return PdoGsbParam::$monPdo->exec("UPDATE produit SET description='$descProduit', prix='$prixProduit', idCategorie='$categorieProduit'");
 	}
 }
 ?>

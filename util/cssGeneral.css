@@ -1,5 +1,5 @@
 html {
-font:normal 100%/1.2em "Trebuchet MS",Verdana,Helvetica,Arial,sans-serif;
+	font:normal 100%/1.2em "Trebuchet MS",Verdana,Helvetica,Arial,sans-serif;
 }
 body{
 	padding : 0% 5%;
@@ -13,11 +13,11 @@ body{
 
 
 fieldset {
- 		display:block;
- 		width:50%;
-		border: 1px dotted #353535;
-		padding:2px;
- 		overflow:hidden;                   
+	display:block;
+	width:50%;
+	border: 1px dotted #353535;
+	padding:2px;
+	overflow:hidden;                   
 }
 
 label {
@@ -29,7 +29,7 @@ label {
 	text-align: left;
 }
 
-input {
+input, select {
 	margin-left: 1%;
 	width: 30%;
 	border: #CCC 1px solid;
@@ -46,16 +46,16 @@ input[type="submit"]
 	width: 30%;
 }
 .erreur{ 
-   background-color:rgb(237,210,229);
-   color:rgb(203,28,128);
-   font-size:1.1em;
-   width:95%;
+	background-color:rgb(237,210,229);
+	color:rgb(203,28,128);
+	font-size:1.1em;
+	width:95%;
 }
 .message{ 
-   background-color:rgb(99, 184, 255);
-   color:rgb(0,0,205);
-   font-size:1.1em;
-   width:95%;
+	background-color:rgb(99, 184, 255);
+	color:rgb(0,0,205);
+	font-size:1.1em;
+	width:95%;
 }
 
 #bandeau {
@@ -63,15 +63,15 @@ input[type="submit"]
 }
 
 #menu{
-height: 1.8em ;
+	height: 1.8em ;
 }
 
 #categories{
-float:left;
+	float:left;
 }
 
 #produits{
-padding:0 150px;
+	padding:0 150px;
 }
 
 #contenu{
@@ -79,37 +79,37 @@ padding:0 150px;
 }
 
 #menu li {
-		list-style-type: none;
-		list-style-image:none;
-		float : left;
-		text-align: center;
-		width: 240px ; 
-		border: 1px solid #600 ; 
-		margin-right: 2px ; 
-		color: #fff ; 
-		background: #ccff11 ;
+	list-style-type: none;
+	list-style-image:none;
+	float : left;
+	text-align: center;
+	width: 240px ; 
+	border: 1px solid #600 ; 
+	margin-right: 2px ; 
+	color: #fff ; 
+	background: #ccff11 ;
 }
 
 #menu li a , #categories li a {
-		text-decoration:none;
+	text-decoration:none;
 }
 
 #categories li {
-		list-style-type: none;
-		list-style-image:none;
-		/*float:left; */
+	list-style-type: none;
+	list-style-image:none;
+	/*float:left; */
     margin-right: 1px ;
     border:1px solid #600;
     width:100px;
     text-align:center;
-background:#ccff11;
+	background:#ccff11;
 }
 
 
 #produits a {
-		list-style-type: none;
-		list-style-image:none;
-		display:inline; 
+	list-style-type: none;
+	list-style-image:none;
+	display:inline; 
     width:175px;
     text-align:center;
     height:205px;
