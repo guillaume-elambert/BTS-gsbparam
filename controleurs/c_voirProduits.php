@@ -13,6 +13,7 @@ if(isset($_SESSION['admin'])){
 			include("vues/v_choixCategorie.php");
 	  		break;
 		}
+
 		case 'voirProduits' :
 		{
 			$lesCategories = $pdo->getLesCategories();
@@ -30,9 +31,6 @@ if(isset($_SESSION['admin'])){
 
 			//Parcours de l'enssemble des catégories
 			foreach ($lesCategories as $uneCategorie) {
-				//$lesProduits[$uneCategorie['id']] = $pdo->getLesProduitsDeCategorie($uneCategorie['id']);
-				//$categorie[$uneCategorie['id']] = $uneCategorie['id'];
-				
 				$lesProduits = $pdo->getLesProduitsDeCategorie($uneCategorie['id']);
 				$categorie = $uneCategorie['id'];
 				include("vues/v_produitsDeCategorie.php");

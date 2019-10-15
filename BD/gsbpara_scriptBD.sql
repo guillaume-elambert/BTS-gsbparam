@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.2
+-- version 4.5.4.1
 -- http://www.phpmyadmin.net
 --
--- Client :  127.0.0.1
--- Généré le :  Mar 15 Octobre 2019 à 09:57
--- Version du serveur :  5.7.9-log
--- Version de PHP :  7.0.0
+-- Client :  localhost
+-- Généré le :  Mar 15 Octobre 2019 à 15:25
+-- Version du serveur :  5.7.11
+-- Version de PHP :  5.6.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -26,12 +26,10 @@ SET time_zone = "+00:00";
 -- Structure de la table `administrateur`
 --
 
-DROP TABLE IF EXISTS `administrateur`;
-CREATE TABLE IF NOT EXISTS `administrateur` (
+CREATE TABLE `administrateur` (
   `id` char(3) COLLATE latin1_bin NOT NULL,
   `nom` char(32) COLLATE latin1_bin NOT NULL,
-  `mdp` char(255) COLLATE latin1_bin NOT NULL,
-  PRIMARY KEY (`id`)
+  `mdp` char(255) COLLATE latin1_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 --
@@ -47,11 +45,9 @@ INSERT INTO `administrateur` (`id`, `nom`, `mdp`) VALUES
 -- Structure de la table `categorie`
 --
 
-DROP TABLE IF EXISTS `categorie`;
-CREATE TABLE IF NOT EXISTS `categorie` (
+CREATE TABLE `categorie` (
   `id` char(32) COLLATE utf8_bin NOT NULL,
-  `libelle` char(32) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `libelle` char(32) COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -69,16 +65,14 @@ INSERT INTO `categorie` (`id`, `libelle`) VALUES
 -- Structure de la table `client`
 --
 
-DROP TABLE IF EXISTS `client`;
-CREATE TABLE IF NOT EXISTS `client` (
+CREATE TABLE `client` (
   `mail` varchar(90) COLLATE utf8_bin NOT NULL,
   `mdp` varchar(255) COLLATE utf8_bin NOT NULL,
   `nom` varchar(30) COLLATE utf8_bin DEFAULT NULL,
   `prenom` varchar(30) COLLATE utf8_bin DEFAULT NULL,
   `rue` varchar(60) COLLATE utf8_bin DEFAULT NULL,
   `cp` char(5) COLLATE utf8_bin DEFAULT NULL,
-  `ville` varchar(60) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`mail`)
+  `ville` varchar(60) COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -96,8 +90,7 @@ INSERT INTO `client` (`mail`, `mdp`, `nom`, `prenom`, `rue`, `cp`, `ville`) VALU
 -- Structure de la table `commande`
 --
 
-DROP TABLE IF EXISTS `commande`;
-CREATE TABLE IF NOT EXISTS `commande` (
+CREATE TABLE `commande` (
   `id` char(32) COLLATE utf8_bin NOT NULL,
   `dateCommande` date DEFAULT NULL,
   `mailClient` varchar(90) COLLATE utf8_bin NOT NULL,
@@ -105,9 +98,7 @@ CREATE TABLE IF NOT EXISTS `commande` (
   `prenomClient` varchar(90) COLLATE utf8_bin NOT NULL,
   `rueClient` varchar(90) COLLATE utf8_bin NOT NULL,
   `cpClient` char(5) COLLATE utf8_bin NOT NULL,
-  `villeClient` varchar(90) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_client_commande_mail` (`mailClient`)
+  `villeClient` varchar(90) COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -125,14 +116,10 @@ INSERT INTO `commande` (`id`, `dateCommande`, `mailClient`, `nomClient`, `prenom
 -- Structure de la table `contenir`
 --
 
-DROP TABLE IF EXISTS `contenir`;
-CREATE TABLE IF NOT EXISTS `contenir` (
+CREATE TABLE `contenir` (
   `idCommande` char(32) COLLATE utf8_bin NOT NULL,
   `idProduit` char(32) COLLATE utf8_bin NOT NULL,
-  `qte` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`idCommande`,`idProduit`),
-  KEY `I_FK_CONTENIR_COMMANDE` (`idCommande`),
-  KEY `I_FK_CONTENIR_Produit` (`idProduit`)
+  `qte` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -154,14 +141,19 @@ INSERT INTO `contenir` (`idCommande`, `idProduit`, `qte`) VALUES
 -- Structure de la table `panier_client`
 --
 
-DROP TABLE IF EXISTS `panier_client`;
-CREATE TABLE IF NOT EXISTS `panier_client` (
+CREATE TABLE `panier_client` (
   `mailClient` varchar(90) COLLATE utf8_bin NOT NULL,
   `produit` char(32) COLLATE utf8_bin NOT NULL,
-  `qte` int(11) NOT NULL,
-  PRIMARY KEY (`produit`),
-  KEY `FK_client_panierClient_mailClient` (`mailClient`)
+  `qte` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `panier_client`
+--
+
+INSERT INTO `panier_client` (`mailClient`, `produit`, `qte`) VALUES
+('guillaume.elambert@yahoo.fr', 'c02', 2),
+('guillaume.elambert@yahoo.fr', 'c01', 2);
 
 -- --------------------------------------------------------
 
@@ -169,15 +161,12 @@ CREATE TABLE IF NOT EXISTS `panier_client` (
 -- Structure de la table `produit`
 --
 
-DROP TABLE IF EXISTS `produit`;
-CREATE TABLE IF NOT EXISTS `produit` (
+CREATE TABLE `produit` (
   `id` char(32) COLLATE utf8_bin NOT NULL,
   `description` char(50) COLLATE utf8_bin DEFAULT NULL,
   `prix` decimal(10,2) DEFAULT NULL,
   `image` char(100) COLLATE utf8_bin DEFAULT NULL,
-  `idCategorie` char(32) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `I_FK_Produit_CATEGORIE` (`idCategorie`)
+  `idCategorie` char(32) COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -185,27 +174,104 @@ CREATE TABLE IF NOT EXISTS `produit` (
 --
 
 INSERT INTO `produit` (`id`, `description`, `prix`, `image`, `idCategorie`) VALUES
-('c01', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/laino-shampooing-douche-au-the-vert-bio-200ml.png', 'CH'),
-('c02', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/klorane-fibres-de-lin-baume-apres-shampooing-150-ml.jpg', 'CH'),
-('c03', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/weleda-kids-2in1-shower-shampoo-orange-fruitee-150-ml.jpg', 'CH'),
-('c04', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/weleda-kids-2in1-shower-shampoo-vanille-douce-150-ml.jpg', 'CH'),
-('c05', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/klorane-shampooing-sec-a-l-extrait-d-ortie-spray-150ml.png', 'CH'),
-('c06', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/phytopulp-mousse-volume-intense-200ml.jpg', 'CH'),
-('c07', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/bio-beaute-by-nuxe-shampooing-nutritif-200ml.png', 'CH'),
-('f01', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/nuxe-men-contour-des-yeux-multi-fonctions-15ml.png', 'CH'),
-('f02', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/tisane-romon-nature-sommirel-bio-sachet-20.jpg', 'CH'),
-('f03', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/la-roche-posay-cicaplast-creme-pansement-40ml.jpg', 'CH'),
-('f04', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/futuro-sport-stabilisateur-pour-cheville-deluxe-attelle-cheville.png', 'CH'),
-('f05', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/microlife-pese-personne-electronique-weegschaal-ws80.jpg', 'CH'),
-('f06', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/melapi-miel-thym-liquide-500g.jpg', 'CH'),
-('f07', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/melapi-pollen-250g.jpg', 'CH'),
-('p01', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/avene-solaire-spray-tres-haute-protection-spf50200ml.png', 'CH'),
-('p02', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/mustela-solaire-lait-tres-haute-protection-spf50-100ml.jpg', 'CH'),
-('p03', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/isdin-eryfotona-aak-fluid-100-50ml.jpg', 'CH'),
-('p04', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/la-roche-posay-anthelios-50-brume-visage-toucher-sec-75ml.png', 'CH'),
-('p05', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/nuxe-sun-huile-lactee-capillaire-protectrice-100ml.png', 'CH'),
-('p06', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/uriage-bariesun-stick-levres-spf30-4g.jpg', 'CH'),
-('p07', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/bioderma-cicabio-creme-spf50-30ml.png', 'CH');
+('c01', 'Laino Shampooing Douche au Thé Vert BIO', '4.00', 'images/laino-shampooing-douche-au-the-vert-bio-200ml.png', 'CH'),
+('c02', 'Klorane fibres de lin baume après shampooing', '10.80', 'images/klorane-fibres-de-lin-baume-apres-shampooing-150-ml.jpg', 'CH'),
+('c03', 'Weleda Kids 2in1 Shower & Shampoo Orange fruitée', '4.00', 'images/weleda-kids-2in1-shower-shampoo-orange-fruitee-150-ml.jpg', 'CH'),
+('c04', 'Weleda Kids 2in1 Shower & Shampoo vanille douce', '4.00', 'images/weleda-kids-2in1-shower-shampoo-vanille-douce-150-ml.jpg', 'CH'),
+('c05', 'Klorane Shampooing sec à l\'extrait d\'ortie', '6.10', 'images/klorane-shampooing-sec-a-l-extrait-d-ortie-spray-150ml.png', 'CH'),
+('c06', 'Phytopulp mousse volume intense', '18.00', 'images/phytopulp-mousse-volume-intense-200ml.jpg', 'CH'),
+('c07', 'Bio Beaute by Nuxe Shampooing nutritif', '8.00', 'images/bio-beaute-by-nuxe-shampooing-nutritif-200ml.png', 'CH'),
+('f01', 'Nuxe Men Contour des Yeux Multi-Fonctions', '12.05', 'images/nuxe-men-contour-des-yeux-multi-fonctions-15ml.png', 'CH'),
+('f02', 'Tisane romon nature sommirel bio sachet 20', '5.50', 'images/tisane-romon-nature-sommirel-bio-sachet-20.jpg', 'CH'),
+('f03', 'La Roche Posay Cicaplast crème pansement', '11.00', 'images/la-roche-posay-cicaplast-creme-pansement-40ml.jpg', 'CH'),
+('f04', 'Futuro sport stabilisateur pour cheville', '26.50', 'images/futuro-sport-stabilisateur-pour-cheville-deluxe-attelle-cheville.png', 'CH'),
+('f05', 'Microlife pèse-personne électronique weegschaal', '63.00', 'images/microlife-pese-personne-electronique-weegschaal-ws80.jpg', 'CH'),
+('f06', 'Melapi Miel Thym Liquide 500g', '6.50', 'images/melapi-miel-thym-liquide-500g.jpg', 'CH'),
+('f07', 'Meli Meliflor Pollen 200g', '8.60', 'images/melapi-pollen-250g.jpg', 'CH'),
+('p01', 'Avène solaire Spray très haute protection', '22.00', 'images/avene-solaire-spray-tres-haute-protection-spf50200ml.png', 'CH'),
+('p02', 'Mustela Solaire Lait très haute Protection', '17.50', 'images/mustela-solaire-lait-tres-haute-protection-spf50-100ml.jpg', 'CH'),
+('p03', 'Isdin Eryfotona aAK fluid', '29.00', 'images/isdin-eryfotona-aak-fluid-100-50ml.jpg', 'CH'),
+('p04', 'La Roche Posay Anthélios 50+ Brume Visage', '8.75', 'images/la-roche-posay-anthelios-50-brume-visage-toucher-sec-75ml.png', 'CH'),
+('p05', 'Nuxe Sun Huile Lactée Capillaire Protectrice', '15.00', 'images/nuxe-sun-huile-lactee-capillaire-protectrice-100ml.png', 'CH'),
+('p06', 'Uriage Bariésun stick lèvres SPF30 4g', '5.65', 'images/uriage-bariesun-stick-levres-spf30-4g.jpg', 'CH'),
+('p07', 'Bioderma Cicabio creme SPF50+ 30ml', '13.70', 'images/bioderma-cicabio-creme-spf50-30ml.png', 'CH');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `promotion`
+--
+
+CREATE TABLE `promotion` (
+  `idProduit` char(32) COLLATE utf8_bin NOT NULL,
+  `dateDebut` date NOT NULL,
+  `dateFin` date NOT NULL,
+  `tauxPromo` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Contenu de la table `promotion`
+--
+
+INSERT INTO `promotion` (`idProduit`, `dateDebut`, `dateFin`, `tauxPromo`) VALUES
+('c01', '2019-10-15', '2019-11-15', 0.3);
+
+--
+-- Index pour les tables exportées
+--
+
+--
+-- Index pour la table `administrateur`
+--
+ALTER TABLE `administrateur`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `categorie`
+--
+ALTER TABLE `categorie`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `client`
+--
+ALTER TABLE `client`
+  ADD PRIMARY KEY (`mail`);
+
+--
+-- Index pour la table `commande`
+--
+ALTER TABLE `commande`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_client_commande_mail` (`mailClient`);
+
+--
+-- Index pour la table `contenir`
+--
+ALTER TABLE `contenir`
+  ADD PRIMARY KEY (`idCommande`,`idProduit`),
+  ADD KEY `I_FK_CONTENIR_COMMANDE` (`idCommande`),
+  ADD KEY `I_FK_CONTENIR_Produit` (`idProduit`);
+
+--
+-- Index pour la table `panier_client`
+--
+ALTER TABLE `panier_client`
+  ADD PRIMARY KEY (`produit`),
+  ADD KEY `FK_client_panierClient_mailClient` (`mailClient`);
+
+--
+-- Index pour la table `produit`
+--
+ALTER TABLE `produit`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `I_FK_Produit_CATEGORIE` (`idCategorie`);
+
+--
+-- Index pour la table `promotion`
+--
+ALTER TABLE `promotion`
+  ADD PRIMARY KEY (`idProduit`,`dateDebut`);
 
 --
 -- Contraintes pour les tables exportées
@@ -230,12 +296,15 @@ ALTER TABLE `contenir`
 ALTER TABLE `produit`
   ADD CONSTRAINT `produit_ibfk_1` FOREIGN KEY (`idCategorie`) REFERENCES `categorie` (`id`);
 
+--
+-- Contraintes pour la table `promotion`
+--
+ALTER TABLE `promotion`
+  ADD CONSTRAINT `FK_idProduit_produit_promotion` FOREIGN KEY (`idProduit`) REFERENCES `produit` (`id`);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
-
 DROP USER IF EXISTS 'visiteurSite'@'localhost';
 CREATE USER 'visiteurSite'@'localhost' IDENTIFIED BY 'a5UTXhjsMreUpAJU';
 GRANT ALL PRIVILEGES ON `elambert_gsbparam`.* TO 'visiteurSite'@'localhost';

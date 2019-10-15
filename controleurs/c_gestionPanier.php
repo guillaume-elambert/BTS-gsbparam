@@ -30,12 +30,14 @@ if(isset($_SESSION['admin'])){
 		{
 			$idProduit=$_REQUEST['produit'];
 
-			if(isset($_SESSION['mail'])){
-				$pdo->retirerDuPanier($idProduit);
-			}
-
+			//MàJ panier local
 			retirerDuPanier($idProduit);
 
+			if(isset($_SESSION['mail'])){
+				//MàJ panier BDD
+				$pdo->retirerDuPanier($idProduit);
+			}
+			
 			//S'il y au moins un produit dans le panier on affiche le panier avec les produits
 			if((sizeof($_SESSION['produits'])-1) > 0){
 				$desIdProduit = getLesIdProduitsDuPanier();

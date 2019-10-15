@@ -6,6 +6,7 @@ if(isset($_SESSION['mail'])){
 			$action = $_REQUEST['action'];
 
 			switch($action) {
+
 				case 'voirProduits' : {
 					$lesCategories = $pdo->getLesCategories();
 					$lesCategories[] = array("id"=>"ajoutProd","libelle"=>"Ajouter un produit");
@@ -16,14 +17,17 @@ if(isset($_SESSION['mail'])){
 					break;
 				}
 
+
 				case 'modifierInfos' : {
 					$laCategorie = $_REQUEST['categorie'];
 					$leProduit = $_REQUEST['produit'];
 					$unProduit = $pdo->getUnProduit($leProduit);
+					$promotion = $pdo->getPromotion($leProduit);
 					$lesCategories = $pdo->getLesCategories();
 					include("vues/v_modifProduit.php");
 					break;
 				}
+
 
 				case 'confirmerModif' : {
 					if($pdo->modifProduit($_REQUEST['produit'],$_REQUEST['description'],$_REQUEST['prix'],$_REQUEST['categorie'])){
@@ -41,6 +45,14 @@ if(isset($_SESSION['mail'])){
 			$lesCategories = $pdo->getLesCategories();
 			$lesCategories[] = array("id"=>"ajoutProd","libelle"=>"Ajouter un produit");
 			include("vues/v_categories.php");
+			
+
+			//Parcours de l'enssemble des catégories
+			foreach ($lesCategories as $uneCategorie) {				
+				$lesProduits = $pdo->getLesProduitsDeCategorie($uneCategorie['id']);
+				$categorie = $uneCategorie['id'];
+				include("vues/v_produitsDeCategorie.php");
+			}
 		}
 
 	} else {

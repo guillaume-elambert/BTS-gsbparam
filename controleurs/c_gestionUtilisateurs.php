@@ -20,14 +20,17 @@ switch($action){
 			
 			$resConnexion = $pdo->connexionUtilisateur($_REQUEST['mail'],$_REQUEST['mdp']);
 			
-			if( isset($_SESSION['admin'])){
-				$pdo->getPanierClient($_REQUEST['mail']);
-				$pdo->setPanierClient($_REQUEST['mail']);
-			}
-
 			//Entrée : la fonction connexionUtilisateur n'a pas retournée d'erreur
 			if(is_null($resConnexion[0])){
 				$_SESSION['mail']=$_REQUEST['mail'];
+				
+				if(!isset($_SESSION['admin'])){
+					//Met à jour le panier en local
+					$pdo->getPanierClient($_SESSION['mail']);
+					//Met à jour le panier dans la BDD
+					$pdo->setPanierClient($_SESSION['mail']);
+				}
+
 				$message = "Vous êtes bien connectez !";
 				include("vues/v_message.php");
 				echo "<a href='?uc=accueil'>Vers l'accueil.</a>";

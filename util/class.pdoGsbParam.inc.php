@@ -57,8 +57,8 @@ class PdoGsbParam {
 	 */				
 	private function __construct()
 	{
-    		PdoGsbParam::$monPdo = new PDO(PdoGsbParam::$serveur.';'.PdoGsbParam::$bdd, PdoGsbParam::$user, PdoGsbParam::$mdp); 
-			PdoGsbParam::$monPdo->query('SET CHARACTER SET utf8');
+		PdoGsbParam::$monPdo = new PDO(PdoGsbParam::$serveur.';'.PdoGsbParam::$bdd, PdoGsbParam::$user, PdoGsbParam::$mdp); 
+		PdoGsbParam::$monPdo->query('SET CHARACTER SET utf8');
 	}
 
 
@@ -310,6 +310,10 @@ class PdoGsbParam {
 		}
 	}
 
+	/**
+	* Fonction qui met à jour le panier de l'utilisateur
+	* @param string $mail adresse email du client
+	*/
 	public function setPanierClient($mail)
 	{
 		$lesProduits = getLesIdProduitsDuPanier();
@@ -328,15 +332,24 @@ class PdoGsbParam {
 		}
 	}
 
+	/**
+	* Fonction qui 
+	*/
 	public function retirerDuPanier($idProduit){
 		$mail = $_SESSION['mail'];
-		$req = PdoGsbParam::$monPdo->query("SELECT qte FROM panier_client WHERE mailClient = '$mail' AND produit = '$idProduit'");
+		$req = PdoGsbParam::$monPdo->query("SELECT qte FROM panier_client WHERE mailClient = '$mail' AND produit = '$idProduit';");
 		
 		$res = $req->fetch();
 		if($res) {
-			$res = PdoGsbParam::$monPdo->exec("UPDATE panier_client SET qte = (qte - 1) WHERE mailClient = '$mail' AND produit = '$idProduit'");
-		} else {
-			$res = PdoGsbParam::$monPdo->exec("INSERT INTO panier_client (mailClient, produit, qte) VALUES ('$mail', '$idProduit',1)");
+			var_dump($res);
+			if($res['qte']>1){
+				$ch = "UPDATE panier_client SET qte = (qte - 1) WHERE mailClient = '$mail' AND produit = '$idProduit';";
+			}
+			else {
+				$ch = "DELETE FROM panier_client WHERE mailClient = '$mail' AND produit = '$idProduit';";
+			}
+
+			$res = PdoGsbParam::$monPdo->exec($ch);
 		}
 	}
 
@@ -369,7 +382,25 @@ class PdoGsbParam {
 	*/
 	public function modifProduit($idProduit, $descProduit, $prixProduit, $categorieProduit){
 		var_dump("UPDATE produit SET description='$descProduit', prix='$prixProduit', idCategorie='$categorieProduit'");
-		return PdoGsbParam::$monPdo->exec("UPDATE produit SET description='$descProduit', prix='$prixProduit', idCategorie='$categorieProduit'");
+		return PdoGsbParam::$monPdo->exec("UPDATE produit SET description='$descProduit', prix='$prixProduit', idCategorie='$categorieProduit' WHERE id='$idProduit'");
+	}
+
+
+	/**
+	* Fonction qui retourne la promotion active de l'article 
+	* @param string $idProduit Identifiant du produit
+	* @return array/boolean resultat de la requête
+	*/
+	public function getPromotion($idProduit){
+		$ch = "SELECT * FROM promotion WHERE idProduit='$idProduit'AND CURRENT_TIMESTAMP BETWEEN dateDebut AND dateFin";
+		$req = PdoGsbParam::$monPdo->query($ch);
+		$res = false;
+		
+		if($req){
+			$res = $req->fetch();
+		}
+
+		return $res;
 	}
 }
 ?>

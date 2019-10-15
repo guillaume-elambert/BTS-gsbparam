@@ -10,7 +10,7 @@
 	<?php 
 	if(isset($_SESSION['admin'])){
 		$lien = "index.php?uc=administrer";
-		$title = "un test";
+		$title = "Administrer";
 	} else {
 		echo "<li><a href=\"index.php?uc=voirProduits&action=nosProduits\"> Nos produits </a></li>";
 		$lien = "index.php?uc=gererPanier&action=voirPanier";
