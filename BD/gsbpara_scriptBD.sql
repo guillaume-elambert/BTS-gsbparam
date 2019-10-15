@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 07 Octobre 2019 à 08:20
+-- Généré le :  Mar 15 Octobre 2019 à 09:57
 -- Version du serveur :  5.7.9-log
 -- Version de PHP :  7.0.0
 
@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS `administrateur`;
 CREATE TABLE IF NOT EXISTS `administrateur` (
   `id` char(3) COLLATE latin1_bin NOT NULL,
   `nom` char(32) COLLATE latin1_bin NOT NULL,
-  `mdp` char(32) COLLATE latin1_bin NOT NULL,
+  `mdp` char(255) COLLATE latin1_bin NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `administrateur` (
 --
 
 INSERT INTO `administrateur` (`id`, `nom`, `mdp`) VALUES
-('1', 'root', 'root');
+('1', 'root', '$2y$10$vd3tGpa182f5ZzKy.2FaIORZ9wDktPzrQyAYJerkgOxOYhfCOwhO2');
 
 -- --------------------------------------------------------
 
@@ -101,6 +101,11 @@ CREATE TABLE IF NOT EXISTS `commande` (
   `id` char(32) COLLATE utf8_bin NOT NULL,
   `dateCommande` date DEFAULT NULL,
   `mailClient` varchar(90) COLLATE utf8_bin NOT NULL,
+  `nomClient` varchar(90) COLLATE utf8_bin NOT NULL,
+  `prenomClient` varchar(90) COLLATE utf8_bin NOT NULL,
+  `rueClient` varchar(90) COLLATE utf8_bin NOT NULL,
+  `cpClient` char(5) COLLATE utf8_bin NOT NULL,
+  `villeClient` varchar(90) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_client_commande_mail` (`mailClient`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -109,10 +114,10 @@ CREATE TABLE IF NOT EXISTS `commande` (
 -- Contenu de la table `commande`
 --
 
-INSERT INTO `commande` (`id`, `dateCommande`, `mailClient`) VALUES
-('1101461660', '2011-07-12', 'dupont@wanadoo.fr'),
-('1101461665', '2011-07-20', 'durant@free.fr'),
-('1101461666', '2019-09-24', 'guillaume.elambert@yahoo.fr');
+INSERT INTO `commande` (`id`, `dateCommande`, `mailClient`, `nomClient`, `prenomClient`, `rueClient`, `cpClient`, `villeClient`) VALUES
+('1101461660', '2011-07-12', 'dupont@wanadoo.fr', '', '', '', '', ''),
+('1101461665', '2011-07-20', 'durant@free.fr', '', '', '', '', ''),
+('1101461666', '2019-09-24', 'guillaume.elambert@yahoo.fr', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -180,27 +185,27 @@ CREATE TABLE IF NOT EXISTS `produit` (
 --
 
 INSERT INTO `produit` (`id`, `description`, `prix`, `image`, `idCategorie`) VALUES
-('c01', 'Laino Shampooing Douche au Thé Vert BIO', '4.00', 'images/laino-shampooing-douche-au-the-vert-bio-200ml.png', 'CH'),
-('c02', 'Klorane fibres de lin baume après shampooing', '10.80', 'images/klorane-fibres-de-lin-baume-apres-shampooing-150-ml.jpg', 'CH'),
-('c03', 'Weleda Kids 2in1 Shower & Shampoo Orange fruitée', '4.00', 'images/weleda-kids-2in1-shower-shampoo-orange-fruitee-150-ml.jpg', 'CH'),
-('c04', 'Weleda Kids 2in1 Shower & Shampoo vanille douce', '4.00', 'images/weleda-kids-2in1-shower-shampoo-vanille-douce-150-ml.jpg', 'CH'),
-('c05', 'Klorane Shampooing sec à l''extrait d''ortie', '6.10', 'images/klorane-shampooing-sec-a-l-extrait-d-ortie-spray-150ml.png', 'CH'),
-('c06', 'Phytopulp mousse volume intense', '18.00', 'images/phytopulp-mousse-volume-intense-200ml.jpg', 'CH'),
-('c07', 'Bio Beaute by Nuxe Shampooing nutritif', '8.00', 'images/bio-beaute-by-nuxe-shampooing-nutritif-200ml.png', 'CH'),
-('f01', 'Nuxe Men Contour des Yeux Multi-Fonctions', '12.05', 'images/nuxe-men-contour-des-yeux-multi-fonctions-15ml.png', 'FO'),
-('f02', 'Tisane romon nature sommirel bio sachet 20', '5.50', 'images/tisane-romon-nature-sommirel-bio-sachet-20.jpg', 'FO'),
-('f03', 'La Roche Posay Cicaplast crème pansement', '11.00', 'images/la-roche-posay-cicaplast-creme-pansement-40ml.jpg', 'FO'),
-('f04', 'Futuro sport stabilisateur pour cheville', '26.50', 'images/futuro-sport-stabilisateur-pour-cheville-deluxe-attelle-cheville.png', 'FO'),
-('f05', 'Microlife pèse-personne électronique weegschaal', '63.00', 'images/microlife-pese-personne-electronique-weegschaal-ws80.jpg', 'FO'),
-('f06', 'Melapi Miel Thym Liquide 500g', '6.50', 'images/melapi-miel-thym-liquide-500g.jpg', 'FO'),
-('f07', 'Meli Meliflor Pollen 200g', '8.60', 'images/melapi-pollen-250g.jpg', 'FO'),
-('p01', 'Avène solaire Spray très haute protection', '22.00', 'images/avene-solaire-spray-tres-haute-protection-spf50200ml.png', 'PS'),
-('p02', 'Mustela Solaire Lait très haute Protection', '17.50', 'images/mustela-solaire-lait-tres-haute-protection-spf50-100ml.jpg', 'PS'),
-('p03', 'Isdin Eryfotona aAK fluid', '29.00', 'images/isdin-eryfotona-aak-fluid-100-50ml.jpg', 'PS'),
-('p04', 'La Roche Posay Anthélios 50+ Brume Visage', '8.75', 'images/la-roche-posay-anthelios-50-brume-visage-toucher-sec-75ml.png', 'PS'),
-('p05', 'Nuxe Sun Huile Lactée Capillaire Protectrice', '15.00', 'images/nuxe-sun-huile-lactee-capillaire-protectrice-100ml.png', 'PS'),
-('p06', 'Uriage Bariésun stick lèvres SPF30 4g', '5.65', 'images/uriage-bariesun-stick-levres-spf30-4g.jpg', 'PS'),
-('p07', 'Bioderma Cicabio creme SPF50+ 30ml', '13.70', 'images/bioderma-cicabio-creme-spf50-30ml.png', 'PS');
+('c01', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/laino-shampooing-douche-au-the-vert-bio-200ml.png', 'CH'),
+('c02', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/klorane-fibres-de-lin-baume-apres-shampooing-150-ml.jpg', 'CH'),
+('c03', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/weleda-kids-2in1-shower-shampoo-orange-fruitee-150-ml.jpg', 'CH'),
+('c04', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/weleda-kids-2in1-shower-shampoo-vanille-douce-150-ml.jpg', 'CH'),
+('c05', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/klorane-shampooing-sec-a-l-extrait-d-ortie-spray-150ml.png', 'CH'),
+('c06', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/phytopulp-mousse-volume-intense-200ml.jpg', 'CH'),
+('c07', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/bio-beaute-by-nuxe-shampooing-nutritif-200ml.png', 'CH'),
+('f01', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/nuxe-men-contour-des-yeux-multi-fonctions-15ml.png', 'CH'),
+('f02', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/tisane-romon-nature-sommirel-bio-sachet-20.jpg', 'CH'),
+('f03', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/la-roche-posay-cicaplast-creme-pansement-40ml.jpg', 'CH'),
+('f04', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/futuro-sport-stabilisateur-pour-cheville-deluxe-attelle-cheville.png', 'CH'),
+('f05', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/microlife-pese-personne-electronique-weegschaal-ws80.jpg', 'CH'),
+('f06', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/melapi-miel-thym-liquide-500g.jpg', 'CH'),
+('f07', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/melapi-pollen-250g.jpg', 'CH'),
+('p01', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/avene-solaire-spray-tres-haute-protection-spf50200ml.png', 'CH'),
+('p02', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/mustela-solaire-lait-tres-haute-protection-spf50-100ml.jpg', 'CH'),
+('p03', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/isdin-eryfotona-aak-fluid-100-50ml.jpg', 'CH'),
+('p04', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/la-roche-posay-anthelios-50-brume-visage-toucher-sec-75ml.png', 'CH'),
+('p05', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/nuxe-sun-huile-lactee-capillaire-protectrice-100ml.png', 'CH'),
+('p06', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/uriage-bariesun-stick-levres-spf30-4g.jpg', 'CH'),
+('p07', 'Laino Shampooing Douche au Thé Vert BIO', '5.00', 'images/bioderma-cicabio-creme-spf50-30ml.png', 'CH');
 
 --
 -- Contraintes pour les tables exportées
@@ -228,6 +233,7 @@ ALTER TABLE `produit`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
 
 
 DROP USER IF EXISTS 'visiteurSite'@'localhost';
