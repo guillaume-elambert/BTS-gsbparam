@@ -31,8 +31,43 @@ if(isset($_SESSION['mail'])){
 
 				case 'confirmerModif' : {
 					if($pdo->modifProduit($_REQUEST['produit'],$_REQUEST['description'],$_REQUEST['prix'],$_REQUEST['categorie'])){
-						$message = "Modifications effectuées avec succès !";
-						include("vues/v_message.php");
+						
+						if($_REQUEST['dateDeb']!="" && $_REQUEST['dateFin']!="" && $_REQUEST['tauxPromo']!=0){
+
+							switch ($pdo->modifPromo($_REQUEST['produit'],$_REQUEST['dateDeb'],$_REQUEST['dateFin'],$_REQUEST['tauxPromo'])){
+								
+
+								case 1 : {
+									$msgErreurs[] = "Il existe déjà une promotion sur cette période pour ce produit...";
+									include ("vues/v_erreurs.php");
+									break;
+								}
+
+								case 2 : {
+									$message = "Création de la promotion effectuées avec succès !";
+									include("vues/v_message.php");
+									break;
+								}
+
+								case 3 : {
+									$message = "Modifications de la promotion effectuées avec succès !";
+									include("vues/v_message.php");
+									break;
+								}
+
+
+								case 4 : {
+									$msgErreurs[] = "Erreurs lors de la création ou la modification de la promotion...";
+									include ("vues/v_erreurs.php");
+									break;
+								}
+							}
+
+						} else {
+							$message = "Modifications des informations du produit effectuées avec succès !";
+							include("vues/v_message.php");
+						}
+
 					} else {
 						$msgErreurs[] = "Erreurs lors de la modification des données...";
 						include ("vues/v_erreurs.php");

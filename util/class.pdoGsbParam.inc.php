@@ -341,7 +341,7 @@ class PdoGsbParam {
 		
 		$res = $req->fetch();
 		if($res) {
-			var_dump($res);
+			
 			if($res['qte']>1){
 				$ch = "UPDATE panier_client SET qte = (qte - 1) WHERE mailClient = '$mail' AND produit = '$idProduit';";
 			}
@@ -381,13 +381,57 @@ class PdoGsbParam {
 	* @return boolean resultat de l'execution
 	*/
 	public function modifProduit($idProduit, $descProduit, $prixProduit, $categorieProduit){
-		var_dump("UPDATE produit SET description='$descProduit', prix='$prixProduit', idCategorie='$categorieProduit'");
-		return PdoGsbParam::$monPdo->exec("UPDATE produit SET description='$descProduit', prix='$prixProduit', idCategorie='$categorieProduit' WHERE id='$idProduit'");
+
+		$ch = "SELECT * FROM produit WHERE id='$idProduit';";
+		$req = PdoGsbParam::$monPdo->query($ch);
+		$res = $req->fetch();
+
+		//Vérification qui permet d'éviter de retourner false si les infos du produit n'ont pas été modifiées
+		//EX: modif uiquement de la promo
+		if($idProduit==$res['id'] && $prixProduit==$res['prix'] && $descProduit==$res['description'] && $categorieProduit==$res['idCategorie']){
+			$exec = true;
+		} else {
+			$exec = PdoGsbParam::$monPdo->exec("UPDATE produit SET description='$descProduit', prix='$prixProduit', idCategorie='$categorieProduit' WHERE id='$idProduit'");
+		}
+
+		return $exec;
+	}
+
+	/**
+	* Ajouter ou modifier la pormotion en cours pour le produit
+	*
+	* @param $idProduit identifiant du produit
+	* @param $dateDebut date de début de la promotion
+	* @param $dateFin date de fin de la promotion
+	* @param $tauxPromo taux (pourcentage) de la promotion
+	* @return int resultat de l'execution
+	*/
+	public function modifPromo($idProduit, $dateDebut, $dateFin, $tauxPromo){
+		$etat=1;
+
+		$ch = "SELECT * FROM promotion WHERE idProduit='$idProduit' AND ( ('$dateDebut' BETWEEN dateDebut AND dateFin) OR ('$dateFin' BETWEEN dateDebut AND dateFin) ) AND dateDebut != '$dateDebut' AND dateFin != '$dateFin';";
+		
+		$req = PdoGsbParam::$monPdo->query($ch);
+
+		if($req){
+			
+			if (PdoGsbParam::$monPdo->exec("INSERT INTO promotion (idProduit,dateDebut,dateFin,tauxPromo) VALUES ('$idProduit','$dateDebut','$dateFin',($tauxPromo/100);") ){
+				$etat = 2;
+			} else if (PdoGsbParam::$monPdo->exec("UPDATE promotion SET dateFin='$dateFin',tauxPromo=($tauxPromo/100) WHERE idProduit='$idProduit' AND dateDebut='$dateDebut';")){
+				$etat = 3;
+			} else {
+				$etat = 4;
+			}
+		}
+
+		return $etat;
+
 	}
 
 
 	/**
-	* Fonction qui retourne la promotion active de l'article 
+	* Fonction qui retourne la promotion active de l'article
+	*
 	* @param string $idProduit Identifiant du produit
 	* @return array/boolean resultat de la requête
 	*/

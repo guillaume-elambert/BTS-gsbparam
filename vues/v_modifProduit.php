@@ -10,8 +10,8 @@
     $dateFin = $promotion['dateFin'];
   } else {
     $tauxPromo = 0;
-    $dateDeb = date("Y-m-d", time());
-    $dateFin = date("Y-m-d", time());
+    $dateDeb = "";
+    $dateFin = "";
   }
 ?>
 
@@ -30,7 +30,7 @@
 
         <p>
            <label for="prix">Prix* </label>
-           <input id="prix" type="number" name="prix" value="<?php echo $prix ?>" min="1" required>
+           <input id="prix" type="number" name="prix" value="<?php echo $prix ?>" min="1" step="any" required>
         </p>
 
 
@@ -60,19 +60,19 @@
 
       <p>
         <label for="dateDeb">Date de début* </label>
-        <input id="dateDeb" type="date"  name="dateDeb" min="<?php echo date("Y-m-d", time()); ?>" value="<?php echo $dateDeb ?>" size ="90" maxlength="90" required>
+        <input id="dateDeb" type="date"  name="dateDeb" min="<?php echo date("Y-m-d", time()); ?>" value="<?php echo $dateDeb ?>" size ="90" maxlength="90">
       </p>
 
 
       <p>
         <label for="dateFin">Date de fin* </label>
-        <input id="dateFin" type="date"  name="dateFin" min="<?php echo date("Y-m-d", time()); ?>" value="<?php echo $dateFin ?>" size ="90" maxlength="90" required>
+        <input id="dateFin" type="date"  name="dateFin" min="<?php echo date("Y-m-d", time()); ?>" value="<?php echo $dateFin ?>" size ="90" maxlength="90">
       </p>
 
 
       <p>
         <label for="tauxPromo">Pourcentage de réduction* </label>
-        <input id="tauxPromo" type="number" min="1" max="100" name="tauxPromo" value="<?php echo $tauxPromo ?>" min="1" required>
+        <input id="tauxPromo" type="number" min="0" max="100" name="tauxPromo" value="<?php echo $tauxPromo ?>" step="any">
       </p>
 
     </fieldset>
