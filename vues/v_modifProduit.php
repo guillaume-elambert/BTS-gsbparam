@@ -1,10 +1,11 @@
 <?php
+  $id =$_REQUEST['produit'];
   $description = $unProduit['description'];
   $prix = $unProduit['prix'];
   $categorie = $unProduit['idCategorie'];
   $image = $unProduit['image'];
 
-  if($promotion!=false){
+  if($promotion){
     $tauxPromo = $promotion['tauxPromo']*100;
     $dateDeb = $promotion['dateDebut'];
     $dateFin = $promotion['dateFin'];
@@ -60,13 +61,13 @@
 
       <p>
         <label for="dateDeb">Date de début* </label>
-        <input id="dateDeb" type="date"  name="dateDeb" min="<?php echo date("Y-m-d", time()); ?>" value="<?php echo $dateDeb ?>" size ="90" maxlength="90">
+        <input id="dateDeb" type="date"  name="dateDeb" value="<?php echo $dateDeb ?>" size ="90" maxlength="90">
       </p>
 
 
       <p>
         <label for="dateFin">Date de fin* </label>
-        <input id="dateFin" type="date"  name="dateFin" min="<?php echo date("Y-m-d", time()); ?>" value="<?php echo $dateFin ?>" size ="90" maxlength="90">
+        <input id="dateFin" type="date"  name="dateFin" value="<?php echo $dateFin ?>" size ="90" maxlength="90">
       </p>
 
 
@@ -83,4 +84,6 @@
     </p>
 
   </form>
+
+  <button onclick= "if(confirm('Voulez-vous vraiment supprimer le produit \'<?php echo $description; ?>\' ?')){window.location.href='?uc=administrer&action=rmProduit&produit=<?php echo $id; ?>'};"> Supprimer le produit</button>
 </div>

@@ -10,4 +10,9 @@
 
 <p>Avec plus de 2000 produits paramédicaux à la vente, GsbPara vous propose à 
 un tarif compétitif un large panel de produits livrés rapidement chez vous !</p>
+
+<br/><br/>
+<h2>Liste des uilisateurs :</h2>
+<p>guillaume.elambert@yahoo.fr:root -> client</p>
+<p>root:root -> administrateur</p>
 </div>

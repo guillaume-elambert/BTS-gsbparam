@@ -33,7 +33,7 @@ switch($action){
 
 				$message = "Vous êtes bien connectez !";
 				include("vues/v_message.php");
-				echo "<a href='?uc=accueil'>Vers l'accueil.</a>";
+				include("vues/v_accueil.php");
 			}
 			//Entrée : il y a eu une erreur lors de la connexion
 			else {
@@ -55,6 +55,7 @@ switch($action){
 		if(isset($_SESSION['mail'])){
 			$message = "Vous êtes connectez, pas besoin de vous inscrire.";
    			include ("vues/v_message.php");
+   			include("vues/v_accueil.php");
 		} else {
 			$nom =''; $prenom='';$rue='';$ville ='';$cp='';$mail='';
 			include("vues/v_inscription.php");
@@ -72,11 +73,16 @@ switch($action){
 		}
 		else
 		{
-			$pdo->creerClient($mail,$_REQUEST['mdp'],$nom,$prenom,$rue,$cp,$ville);
-			$_SESSION['mail']=$mail;
-			$message = "Vous êtes bien inscris et connectez. A l'avenir votre identifiant sera ".$mail." .";
-			include("vues/v_message.php");
-			echo "<a href='?uc=accueil'>Vers l'accueil.</a>";
+			if($pdo->creerClient($mail,$_REQUEST['mdp'],$nom,$prenom,$rue,$cp,$ville)){
+				$_SESSION['mail']=$mail;
+				$message = "Vous êtes bien inscris et connectez. A l'avenir votre identifiant sera ".$mail." .";
+				include("vues/v_message.php");
+				include("vues/v_accueil.php");
+			} else {
+				$msgErreurs[]='Cette adresse mel est déjà utilisée...';
+				include ("vues/v_erreurs.php");
+				include ("vues/v_inscription.php");
+			}
 		}
 		break;
 	}

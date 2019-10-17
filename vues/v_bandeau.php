@@ -5,13 +5,14 @@
 <!--  Menu haut-->
 <ul id="menu">
 	<li><a href="index.php?uc=accueil"> Accueil </a></li>
-	<li><a href="index.php?uc=voirProduits&action=voirCategories"> Nos produits par catégorie </a></li>
 	
 	<?php 
 	if(isset($_SESSION['admin'])){
 		$lien = "index.php?uc=administrer";
 		$title = "Administrer";
 	} else {
+
+		echo "<li><a href=\"index.php?uc=voirProduits&action=voirCategories\"> Nos produits par catégorie </a></li>";
 		echo "<li><a href=\"index.php?uc=voirProduits&action=nosProduits\"> Nos produits </a></li>";
 		$lien = "index.php?uc=gererPanier&action=voirPanier";
 		$title = "Voir son panier (".nbProduitsDuPanier().")";

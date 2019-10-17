@@ -11,20 +11,20 @@
          <input id="prenom" type="text" name="prenom" value="<?php echo $prenom ?>" size="30" maxlength="30" required>
       </p>
       <p>
-         <label for="rue">rue*</label>
+         <label for="rue">Adresse*</label>
           <input id="rue" type="text" name="rue" value="<?php echo $rue ?>" size="60" maxlength="60" required>
       </p>
       <p>
-         <label for="cp">code postal* </label>
+         <label for="cp">Code postal* </label>
          <input id="cp" type="text" name="cp" value="<?php echo $cp ?>" size="5" maxlength="5" required>
       </p>
       <p>
-         <label for="ville">ville* </label>
+         <label for="ville">Ville* </label>
          <input id="ville" type="text" name="ville"  value="<?php echo $ville ?>" size="60" maxlength="60" required>
       </p>
       <p>
-         <label for="mail">mail* </label>
-         <input id="mail" type="text"  name="mail" value="<?php echo $mail ?>" size ="90" maxlength="90" required>
+         <label for="mail">Mail* </label>
+         <input id="mail" type="email"  name="mail" value="<?php echo $mail ?>" size ="90" maxlength="90" required>
       </p>
       <p>
          <label for="mdp">Mot de passe* </label>

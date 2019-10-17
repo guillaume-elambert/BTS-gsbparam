@@ -200,8 +200,8 @@ class PdoGsbParam {
 			
 			$parcoursIndiceArrayQte++;
 		}
-		
-		return PdoGsbParam::$monPdo->exec($lesRequetes);
+		$req = PdoGsbParam::$monPdo->prepare($lesRequetes);
+		return $req->execute();
 	}
 
 	/**
@@ -219,17 +219,10 @@ class PdoGsbParam {
 	{
 		$pwd = password_hash( $mdp, PASSWORD_DEFAULT );
 		
-		$req = "INSERT INTO client (mel,mdp,nom,prenom,rue,cp,ville) VALUES ('$mail','$pwd','$nom','$prenom','$rue','$cp','$ville')";
-		$res = PdoGsbParam::$monPdo->exec($req);
+		$ch = "INSERT INTO client (mel,mdp,nom,prenom,rue,cp,ville) VALUES ('$mail','$pwd','$nom','$prenom','$rue','$cp','$ville')";
+		$req = PdoGsbParam::$monPdo->prepare($req);
+		return $req->execute();
 	}
-
-	/*public function getClient($mail)
-	{
-		$req = "SELECT * FROM client WHERE mail = '$mail'";
-		$res = PdoGsbParam::$monPdo->exec($req);
-		$leClient = $res->fetch();
-		$nom = $leClient['nom']; $prenom = $leClient['prenom']; $rue = $leClient['rue']; $cp = $leClient['cp']; $ville = $leClient['ville']; $mail = $leClient['mel']; 
-	}*/
 
 
 	/**
@@ -259,10 +252,12 @@ class PdoGsbParam {
 	*/
 	public function connexionUtilisateur($mail, $mdp)
 	{
-		$res = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mail='$mail';");
+		$req = PdoGsbParam::$monPdo->prepare("SELECT * FROM client WHERE mail='$mail';");
+		$res = $req->execute()
 		$userInfo = $res->fetch();
 		
-		$res2 = PdoGsbParam::$monPdo->query("SELECT * FROM administrateur WHERE nom='$mail';");
+		$req2 = PdoGsbParam::$monPdo->prepare("SELECT * FROM administrateur WHERE nom='$mail';");
+		$res2 = $req2->execute();
 		$userInfo2 = $res2->fetch();
 
 		if($userInfo || $userInfo2){
@@ -314,13 +309,12 @@ class PdoGsbParam {
 	* Fonction qui met à jour le panier de l'utilisateur
 	* @param string $mail adresse email du client
 	*/
-	public function setPanierClient($mail)
-	{
+	public function setPanierClient($mail){
+		$exec = false;
 		$lesProduits = getLesIdProduitsDuPanier();
 		if( !empty($lesProduits) ) {
-			$res = PdoGsbParam::$monPdo->exec("DELETE FROM panier_client WHERE mailClient = '$mail'");
 			
-			$ch='';
+			$ch="DELETE FROM panier_client WHERE mailClient = '$mail'";
 			$i=0;
 			
 			foreach (getLesIdProduitsDuPanier() as $unProduit) {
@@ -328,14 +322,18 @@ class PdoGsbParam {
 				$ch .="INSERT INTO panier_client (mailClient, produit, qte) VALUES ('$mail', '$unProduit',$qte);";
 				$i++;
 			}
-			$res = PdoGsbParam::$monPdo->exec($ch);
+
+			$req = PdoGsbParam::$monPdo->prepare("DELETE FROM panier_client WHERE mailClient = '$mail'");
+			$exec = $req->execute($ch);
 		}
+		return $exec;
 	}
 
 	/**
 	* Fonction qui 
 	*/
 	public function retirerDuPanier($idProduit){
+		$exec = false;
 		$mail = $_SESSION['mail'];
 		$req = PdoGsbParam::$monPdo->query("SELECT qte FROM panier_client WHERE mailClient = '$mail' AND produit = '$idProduit';");
 		
@@ -349,25 +347,37 @@ class PdoGsbParam {
 				$ch = "DELETE FROM panier_client WHERE mailClient = '$mail' AND produit = '$idProduit';";
 			}
 
-			$res = PdoGsbParam::$monPdo->exec($ch);
+			$req = PdoGsbParam::$monPdo->prepare($ch);
+			$exec = $req->execute();
 		}
+		return $exec;
 	}
 
 	public function viderPanier(){
 		$mail = $_SESSION['mail'];
-		$res = PdoGsbParam::$monPdo->exec("DELETE FROM panier_client WHERE mailClient = '$mail'");
+		$req = PdoGsbParam::$monPdo->prepare("DELETE FROM panier_client WHERE mailClient = '$mail'");
+		return $req->execute();
 	}
 
 	public function ajouterAuPanier($idProduit){
+		$exec = false;
 		$mail = $_SESSION['mail'];
 		$req = PdoGsbParam::$monPdo->query("SELECT qte FROM panier_client WHERE mailClient = '$mail' AND produit = '$idProduit'");
 		
 		$res = $req->fetch();
 		if($res) {
-			$res = PdoGsbParam::$monPdo->exec("UPDATE panier_client SET qte = (qte + 1) WHERE mailClient = '$mail' AND produit = '$idProduit'");
+			$ch = "UPDATE panier_client SET qte = (qte + 1) WHERE mailClient = '$mail' AND produit = '$idProduit'";
 		} else {
-			$res = PdoGsbParam::$monPdo->exec("INSERT INTO panier_client (mailClient, produit, qte) VALUES ('$mail', '$idProduit',1)");
+			$ch = "INSERT INTO panier_client (mailClient, produit, qte) VALUES ('$mail', '$idProduit',1)";
 		}
+
+		if(isset($ch)){
+			$req = PdoGsbParam::$monPdo->prepare($ch);
+			$exec = $req->execute();
+		}
+
+		return $exec;
+
 	}
 
 
@@ -386,12 +396,13 @@ class PdoGsbParam {
 		$req = PdoGsbParam::$monPdo->query($ch);
 		$res = $req->fetch();
 
-		//Vérification qui permet d'éviter de retourner false si les infos du produit n'ont pas été modifiées
+		//Vérification qui permet d'éviter de retourner false (et donc d'afficher une erreur) si les infos du produit n'ont pas été modifiées
 		//EX: modif uiquement de la promo
 		if($idProduit==$res['id'] && $prixProduit==$res['prix'] && $descProduit==$res['description'] && $categorieProduit==$res['idCategorie']){
 			$exec = true;
 		} else {
-			$exec = PdoGsbParam::$monPdo->exec("UPDATE produit SET description='$descProduit', prix='$prixProduit', idCategorie='$categorieProduit' WHERE id='$idProduit'");
+			$req = PdoGsbParam::$monPdo->prepare("UPDATE produit SET description='$descProduit', prix='$prixProduit', idCategorie='$categorieProduit' WHERE id='$idProduit'");
+			$exec = $req->execute();
 		}
 
 		return $exec;
@@ -407,20 +418,37 @@ class PdoGsbParam {
 	* @return int resultat de l'execution
 	*/
 	public function modifPromo($idProduit, $dateDebut, $dateFin, $tauxPromo){
-		$etat=1;
+		$etat = "";
 
-		$ch = "SELECT * FROM promotion WHERE idProduit='$idProduit' AND ( ('$dateDebut' BETWEEN dateDebut AND dateFin) OR ('$dateFin' BETWEEN dateDebut AND dateFin) ) AND dateDebut != '$dateDebut' AND dateFin != '$dateFin';";
-		
-		$req = PdoGsbParam::$monPdo->query($ch);
-
-		if($req){
+		//Entrée : Mauvaise des dates
+		if($dateDebut > $dateFin){
+			$etat = 1;
+		} else {
+			//Récupère la promotion dont les dates entrée en paramètres sont comprise entre celles de la bdd 
+			$ch = "SELECT * FROM promotion WHERE idProduit='$idProduit' AND ( ('$dateDebut' BETWEEN dateDebut AND dateFin) OR ('$dateFin' BETWEEN dateDebut AND dateFin)) ORDER BY dateDebut,dateFin DESC";
+			$req = PdoGsbParam::$monPdo->query($ch);
 			
-			if (PdoGsbParam::$monPdo->exec("INSERT INTO promotion (idProduit,dateDebut,dateFin,tauxPromo) VALUES ('$idProduit','$dateDebut','$dateFin',($tauxPromo/100);") ){
-				$etat = 2;
-			} else if (PdoGsbParam::$monPdo->exec("UPDATE promotion SET dateFin='$dateFin',tauxPromo=($tauxPromo/100) WHERE idProduit='$idProduit' AND dateDebut='$dateDebut';")){
-				$etat = 3;
+			if($req){
+				
+				$laPromo = $req->fetch();
+
+				//Entrée : Il existe déjà une promotion sur cette periode
+				if(($laPromo['dateDebut']<$dateDebut && $laPromo['dateFin']<$dateDebut) || ($laPromo['dateDebut']<$dateFin && $laPromo['dateFin']<$dateFin) ){
+					$etat = 2;
+				}
 			} else {
-				$etat = 4;
+				$req = PdoGsbParam::$monPdo->prepare("INSERT INTO promotion (idProduit,dateDebut,dateFin,tauxPromo) VALUES ('$idProduit','$dateDebut','$dateFin',($tauxPromo/100);");
+
+				//Entrée : Insertion pormo réussie
+				if ($req->execute() ){
+					$etat = 3;
+				}
+				//Entée : modification de la promo réussie 
+				else if (PdoGsbParam::$monPdo->exec("UPDATE promotion SET dateFin='$dateFin',tauxPromo=($tauxPromo/100) WHERE idProduit='$idProduit' AND dateDebut='$dateDebut';")){
+					$etat = 4;
+				} else {
+					$etat = 5;
+				}
 			}
 		}
 
@@ -445,6 +473,21 @@ class PdoGsbParam {
 		}
 
 		return $res;
+	}
+
+
+	/**
+	* Fonction qui supprime un produit de la base de données
+	* @param string $idProduit l'identifiant du produit à supprimer
+	*/
+	public function rmProduit($idProduit){
+		$ch = "DELETE FROM panier_client WHERE produit = '$idProduit';
+		DELETE FROM promotion WHERE idProduit = '$idProduit';
+		DELETE FROM contenir WHERE idProduit = '$idProduit';
+		DELETE FROM produit WHERE id = '$idProduit';";
+		
+		$req = PdoGsbParam::$monPdo->prepare($ch);
+		return $req->execute();
 	}
 }
 ?>
