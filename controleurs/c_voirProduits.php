@@ -61,12 +61,12 @@ if(isset($_SESSION['admin'])){
 				$categorie = $_REQUEST['categorie'];
 
 				//Si ancienne action = "nosProduit" redirection vers cette page
-				if( isset($_REQUEST['pact']) && $_REQUEST['pact'] == 'nosProduits'){
-					header('Location:index.php?uc=voirProduits&action='.$_REQUEST['pact']);
+				if( isset($_REQUEST['pAct']) && $_REQUEST['pAct'] == 'nosProduits'){
+					header('Location:index.php?uc=voirProduits&action='.$_REQUEST['pAct']);
 				}
 				//Sinon redirection vers produit par catégorie
 				else {
-				 	header('Location:index.php?uc=voirProduits&action='.$_REQUEST['pact'].'&categorie='.$categorie);
+				 	header('Location:index.php?uc=voirProduits&action='.$_REQUEST['pAct'].'&categorie='.$categorie);
 				}
 			}
 			else 

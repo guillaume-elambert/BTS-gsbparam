@@ -8,16 +8,16 @@
 
  /** 
  * PdoGsbParam
- 
+ *
  * classe PdoGsbParam : classe d'accès aux données. 
  * Utilise les services de la classe PDO
  * pour l'application GsbParam
  * Les attributs sont tous statiques,
  * les 4 premiers pour la connexion
- 
+ *
 * @package  GsbParam\util
 * @version 2019_v2
-* @author M. Jouin
+* @author M. Jouin 
 */
 
 class PdoGsbParam {
@@ -173,15 +173,16 @@ class PdoGsbParam {
 	 * Crée une commande à partir des arguments validés passés en paramètre, l'identifiant est
 	 * construit à partir du maximum existant ; crée les lignes de commandes dans la table contenir à partir du
 	 * tableau d'idProduit passé en paramètre
+	 *
 	 * @param string $nom nom du client
 	 * @param string $rue rue du client
 	 * @param string $cp cp du client
 	 * @param string $ville ville du client
 	 * @param string $mail mail du client
 	 * @param array $lesIdProduit tableau associatif contenant les id des produits commandés 
+	 * @return boolan $exec le resultat de l'execution
 	*/
-	public function creerCommande($nom, $prenom, $rue,$cp,$ville,$mail, $lesIdProduit, $qteProduit )
-	{
+	public function creerCommande($nom, $prenom, $rue,$cp,$ville,$mail, $lesIdProduit, $qteProduit ){
 		// on récupère le dernier id de commande
 		$req = 'select max(id) as maxi from commande';
 		$res = PdoGsbParam::$monPdo->query($req);
@@ -252,13 +253,11 @@ class PdoGsbParam {
 	*/
 	public function connexionUtilisateur($mail, $mdp)
 	{
-		$req = PdoGsbParam::$monPdo->prepare("SELECT * FROM client WHERE mail='$mail';");
-		$res = $req->execute()
-		$userInfo = $res->fetch();
+		$req = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mail='$mail';");
+		$userInfo = $req->fetch();
 		
-		$req2 = PdoGsbParam::$monPdo->prepare("SELECT * FROM administrateur WHERE nom='$mail';");
-		$res2 = $req2->execute();
-		$userInfo2 = $res2->fetch();
+		$req2 = PdoGsbParam::$monPdo->query("SELECT * FROM administrateur WHERE nom='$mail';");
+		$userInfo2 = $req2->fetch();
 
 		if($userInfo || $userInfo2){
 
@@ -283,8 +282,13 @@ class PdoGsbParam {
 		return $lesErreurs;
 	}
 
-	public function getPanierClient($mail)
-	{
+
+	/**
+	* Fonction qui réplique en local le panier (stocké en ligne) du client
+	*
+	* @param string $mail l'adresse email du client
+	*/
+	public function getPanierClient($mail) {
 		$res = PdoGsbParam::$monPdo->query("SELECT * FROM panier_client WHERE mailClient = '$mail'");
 		if($res){
 			$panier_client = $res->fetchAll();
@@ -305,9 +309,13 @@ class PdoGsbParam {
 		}
 	}
 
+
+
 	/**
 	* Fonction qui met à jour le panier de l'utilisateur
+	*
 	* @param string $mail adresse email du client
+	* @return boolean $exec resultat de l'execution
 	*/
 	public function setPanierClient($mail){
 		$exec = false;
@@ -329,8 +337,13 @@ class PdoGsbParam {
 		return $exec;
 	}
 
+
+
 	/**
-	* Fonction qui 
+	* Fonction qui retire une unité dans le panier du client
+	*
+	* @param string $idProduit identifiant du produit
+	* @return boolean $exec resultat de l'execution
 	*/
 	public function retirerDuPanier($idProduit){
 		$exec = false;
@@ -359,6 +372,13 @@ class PdoGsbParam {
 		return $req->execute();
 	}
 
+
+	/**
+	* Incrémente la quantité pour le produit dans un panier
+	*
+	* @param string $idProduit identifiant du produit
+	* @return boolean $exec resultat de l'execution
+	*/
 	public function ajouterAuPanier($idProduit){
 		$exec = false;
 		$mail = $_SESSION['mail'];
@@ -444,10 +464,13 @@ class PdoGsbParam {
 					$etat = 3;
 				}
 				//Entée : modification de la promo réussie 
-				else if (PdoGsbParam::$monPdo->exec("UPDATE promotion SET dateFin='$dateFin',tauxPromo=($tauxPromo/100) WHERE idProduit='$idProduit' AND dateDebut='$dateDebut';")){
-					$etat = 4;
-				} else {
-					$etat = 5;
+				else {
+					$req = PdoGsbParam::$monPdo->prepare("UPDATE promotion SET dateFin='$dateFin',tauxPromo=($tauxPromo/100) WHERE idProduit='$idProduit' AND dateDebut='$dateDebut';");
+					if ($res->execute()){
+						$etat = 4;
+					} else {
+						$etat = 5;
+					}
 				}
 			}
 		}
@@ -488,6 +511,25 @@ class PdoGsbParam {
 		
 		$req = PdoGsbParam::$monPdo->prepare($ch);
 		return $req->execute();
+	}
+
+
+	/**
+	* Fonction qui creer un nouveau produit
+	*
+	* @param string $id identifiant du produit
+	* @param string $description description du produit
+	* @param flaot $prix prix du produit
+	* @param string $categorie identifiant de la catégorie du produit
+	* @param string $image chemin vers de l'image du produit
+	* @return boolean $exec Résultat de l'éxecution
+	*/
+	public function creerProduit($id,$description,$prix,$categorie,$image){
+		$ch = "INSERT INTO produit (id,description,prix,idCategorie,image) VALUES ('$id','$description', $prix, '$categorie', '$image');";
+
+		$req = PdoGsbParam::$monPdo->prepare($ch);
+		return $req->execute();
+
 	}
 }
 ?>

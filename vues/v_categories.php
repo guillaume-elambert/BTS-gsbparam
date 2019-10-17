@@ -23,11 +23,6 @@ foreach( $lesCategories as $uneCategorie)
 	</li>
 <?php
 }
-
-
-
-"SELECT * FROM promotion
- WHERE ";
 ?>
 </ul>
 

@@ -20,7 +20,7 @@ foreach( $lesProduits as $unProduit)
 			if(isset($_SESSION['admin']) ) {
 				echo "<a href=\"?uc=administrer&categorie=".$categorie."&produit=".$id."&action=modifierInfos\">Modifier les infos de ce produit</a>";
 			} else {
-				echo "<a href=\"?uc=voirProduits&categorie=".$categorie."&produit=".$id."&action=ajouterAuPanier&pact=".$_REQUEST['action']."\"><img src=\"images/mettrepanier.png\" title=\"Ajouter au panier\" alt=\"Mettre au panier\"></a>";
+				echo "<a href=\"?uc=voirProduits&categorie=".$categorie."&produit=".$id."&action=ajouterAuPanier&pAct=".$_REQUEST['action']."\"><img src=\"images/mettrepanier.png\" title=\"Ajouter au panier\" alt=\"Mettre au panier\"></a>";
 			}
 			?>
 		</div>	

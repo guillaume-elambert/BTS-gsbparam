@@ -1,6 +1,6 @@
 <?php
   $id =$_REQUEST['produit'];
-  $description = $unProduit['description'];
+  $description = addslashes($unProduit['description']);
   $prix = $unProduit['prix'];
   $categorie = $unProduit['idCategorie'];
   $image = $unProduit['image'];
@@ -85,5 +85,5 @@
 
   </form>
 
-  <button onclick= "if(confirm('Voulez-vous vraiment supprimer le produit \'<?php echo $description; ?>\' ?')){window.location.href='?uc=administrer&action=rmProduit&produit=<?php echo $id; ?>'};"> Supprimer le produit</button>
+  <button onclick= "if(confirm('Voulez-vous vraiment supprimer le produit \' <?php echo $description; ?> \' ?')){window.location.href='?uc=administrer&action=rmProduit&produit=<?php echo $id; ?>'};"> Supprimer le produit</button>
 </div>

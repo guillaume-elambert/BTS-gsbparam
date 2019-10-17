@@ -13,7 +13,7 @@ switch($action){
 				unset($_SESSION['admin']);
 			}
 			
-			header("Location: ?uc=accueil");
+			header("Location: ?uc=accueil&message=Vous+êtes+bien+déconnectez+!");
 		} 
 		//Entrée : l'utilisateur vient d'envoyer des info de connexion via le formulaire
 		else if (isset($_REQUEST['mail']) && isset($_REQUEST['mdp'])) {
@@ -32,8 +32,7 @@ switch($action){
 				}
 
 				$message = "Vous êtes bien connectez !";
-				include("vues/v_message.php");
-				include("vues/v_accueil.php");
+				header("Location: ?uc=accueil&message=Vous+êtes+bien+connectez+!");
 			}
 			//Entrée : il y a eu une erreur lors de la connexion
 			else {
@@ -64,7 +63,9 @@ switch($action){
 	}
 
 	case 'confirmerInscription' : {
-		$nom =$_REQUEST['nom']; $prenom=$_REQUEST['prenom']; $rue=$_REQUEST['rue'];$ville =$_REQUEST['ville'];$cp=$_REQUEST['cp'];$mail=$_REQUEST['mail'];
+		if(isset($_REQUEST['nom']){
+			$nom =$_REQUEST['nom']; $prenom=$_REQUEST['prenom']; $rue=$_REQUEST['rue'];$ville =$_REQUEST['ville'];$cp=$_REQUEST['cp'];$mail=$_REQUEST['mail'];
+		}
 	 	$msgErreurs = getErreursSaisieCommande($nom,$prenom,$rue,$ville,$cp,$mail);
 		if (count($msgErreurs)!=0)
 		{

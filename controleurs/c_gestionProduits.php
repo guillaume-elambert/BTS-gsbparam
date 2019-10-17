@@ -31,7 +31,7 @@ if(isset($_SESSION['mail'])){
 
 
 				case 'confirmerModif' : {
-					if($pdo->modifProduit($_REQUEST['produit'],$_REQUEST['description'],$_REQUEST['prix'],$_REQUEST['categorie'])){
+					if($pdo->modifProduit($_REQUEST['produit'],addslashes($_REQUEST['description']),$_REQUEST['prix'],$_REQUEST['categorie'])){
 						$message = "Modifications des informations du produits effectuées avec succès !";
 						include("vues/v_message.php");
 						if($_REQUEST['dateDeb']!="" && $_REQUEST['dateFin']!="" && $_REQUEST['tauxPromo']!=0){
@@ -73,16 +73,61 @@ if(isset($_SESSION['mail'])){
 								}
 							}
 							
-						} else {
-							$message = "Modifications des informations du produit effectuées avec succès !";
-							include("vues/v_message.php");
 						}
 
 					} else {
-						$msgErreurs[] = "Erreurs lors de la modification des données...";
+						$msgErreurs[] = "Erreurs lors de la modification des données du produit...";
 						include ("vues/v_erreurs.php");
 					}
 
+
+						//Affichage du la page d'administration
+						$lesCategories = $pdo->getLesCategories();
+						$lesCategories[] = array("id"=>"ajoutProd","libelle"=>"Ajouter un produit");
+						include("vues/v_categories.php");
+						
+
+						//Parcours de l'enssemble des catégories
+						foreach ($lesCategories as $uneCategorie) {				
+							$lesProduits = $pdo->getLesProduitsDeCategorie($uneCategorie['id']);
+							$categorie = $uneCategorie['id'];
+							include("vues/v_produitsDeCategorie.php");
+						}
+
+					break;
+				}
+
+
+				case 'rmProduit' : {
+					$imageProduit = $pdo->getUnProduit($_REQUEST['produit'])['image'];
+
+					if($pdo->rmProduit($_REQUEST['produit'])){
+						
+						$message = "Supression du produit dans la BDD efféctuée avec succès !";
+						include("vues/v_message.php");
+						
+						if($imageProduit !== ""){
+							if(file_exists($imageProduit)){
+								if(unlink($imageProduit)){
+									$msgErreurs[] = "Echec de suppression de l'image du produit...";
+									include("vues/v_rreurs.php");
+								} else {
+									$message = "Supression de l'image efféctuée avec succès !";
+									include("vues/v_message.php");
+								}
+							} else {
+								$msgErreurs[] = "L'image du produit n'existe pas/plus...";
+								include("vues/v_erreurs.php");
+							}
+						} else {
+							$msgErreurs[] = "Le produit n'a pas d'image...";
+							include("vues/v_erreurs.php");
+						}
+
+					} else {
+						$msgErreurs[] = "Erreur lors de la suppression du produit dans la BDD...";
+						include("vues/v_erreurs.php");
+					}
 
 					//Affichage du la page d'administration
 					$lesCategories = $pdo->getLesCategories();
@@ -101,27 +146,57 @@ if(isset($_SESSION['mail'])){
 				}
 
 
-				case 'rmProduit' : {
-
-					if($pdo->rmProduit($_REQUEST['produit'])){
-						$message = "Supression du produit efféctuée avec succès !";
-						include("vues/v_message.php");
-					} else {
-						$msgErreurs[] = "Erreur lors de la suppression du produit...";
-						include("vues/v_erreurs.php");
-					}
-					
-					//Affichage du la page d'administration
+				case 'ajoutProduit' : {
+					$id="";
+					$description="";
+					$prix=0;
+					$categorie="C1";
 					$lesCategories = $pdo->getLesCategories();
-					$lesCategories[] = array("id"=>"ajoutProd","libelle"=>"Ajouter un produit");
-					include("vues/v_categories.php");
-					
 
-					//Parcours de l'enssemble des catégories
-					foreach ($lesCategories as $uneCategorie) {				
-						$lesProduits = $pdo->getLesProduitsDeCategorie($uneCategorie['id']);
-						$categorie = $uneCategorie['id'];
-						include("vues/v_produitsDeCategorie.php");
+					include("vues/v_ajoutProduit.php");
+					break;
+				}
+
+				case 'confirmerAjoutProduit' : {
+
+					if(isset($_REQUEST["valider"])){
+						$id=$_REQUEST['id'];
+						$description=addslashes($_REQUEST['description']);
+						$prix=$_REQUEST['prix'];
+						$categorie=$_REQUEST['categorie'];
+						$image="images/".addslashes($_FILES['image']['name']);
+
+						if(creerImage()){
+							if($pdo->creerProduit($id,$description,$prix,$categorie,$image)){
+								$message = "Ajout du produit dans la base de donnée effectué avec succès !";
+								include("vues/v_message.php");
+
+								$lesCategories = $pdo->getLesCategories();
+								$lesCategories[] = array("id"=>"ajoutProd","libelle"=>"Ajouter un produit");
+								
+								include("vues/v_categories.php");
+								
+
+								//Parcours de l'enssemble des catégories
+								foreach ($lesCategories as $uneCategorie) {				
+									$lesProduits = $pdo->getLesProduitsDeCategorie($uneCategorie['id']);
+									$categorie = $uneCategorie['id'];
+									include("vues/v_produitsDeCategorie.php");
+								}
+
+
+							} else {
+								$lesCategories = $pdo->getLesCategories();
+								$msgErreurs[] = "Une erreur s'est produite lors de l'insertion du produit dans la base de données...";
+								include("vues/v_erreurs.php");
+								include("vues/v_ajoutProduit.php");
+							}
+						} else {
+							$lesCategories = $pdo->getLesCategories();
+							$msgErreurs[] = "Veuillez séléctionner un fichier valide !";
+							include("vues/v_erreurs.php");
+							include("vues/v_ajoutProduit.php");
+						}
 					}
 
 					break;
