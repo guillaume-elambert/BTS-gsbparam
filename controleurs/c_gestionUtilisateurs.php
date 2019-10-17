@@ -63,8 +63,20 @@ switch($action){
 	}
 
 	case 'confirmerInscription' : {
-		if(isset($_REQUEST['nom']){
-			$nom =$_REQUEST['nom']; $prenom=$_REQUEST['prenom']; $rue=$_REQUEST['rue'];$ville =$_REQUEST['ville'];$cp=$_REQUEST['cp'];$mail=$_REQUEST['mail'];
+		if( isset($_REQUEST['nom']) ) {
+			$nom = $_REQUEST['nom'];
+			$prenom = $_REQUEST['prenom'];
+			$rue = $_REQUEST['rue'];
+			$ville = $_REQUEST['ville'];
+			$cp = $_REQUEST['cp'];
+			$mail = $_REQUEST['mail'];
+
+			$nom = addcslashes($nom);
+			$prenom = addcslashes($prenom);
+			$rue = addcslashes($rue);
+			$ville = addcslashes($ville);
+			$cp = addcslashes($cp);
+			$mail = addcslashes($mail);
 		}
 	 	$msgErreurs = getErreursSaisieCommande($nom,$prenom,$rue,$ville,$cp,$mail);
 		if (count($msgErreurs)!=0)
