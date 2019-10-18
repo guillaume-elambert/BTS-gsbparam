@@ -215,14 +215,32 @@ class PdoGsbParam {
 	* @param string $rue rue du client
 	* @param string $cp cp du client
 	* @param string $ville ville du client
+	* @return boolean Resultat de l'insertion
 	*/
-	public function creerClient($mail,$mdp,$nom,$prenom,$rue,$cp,$ville)
-	{
+	public function creerClient($mail,$mdp,$nom,$prenom,$rue,$cp,$ville) {
+		
 		$pwd = password_hash( $mdp, PASSWORD_DEFAULT );
 		
 		$ch = "INSERT INTO client (mel,mdp,nom,prenom,rue,cp,ville) VALUES ('$mail','$pwd','$nom','$prenom','$rue','$cp','$ville')";
-		$req = PdoGsbParam::$monPdo->prepare($req);
+		$req = PdoGsbParam::$monPdo->prepare($ch);
 		return $req->execute();
+	}
+
+
+	/**
+	* Créé un client avec un mail, mot de passe, nom & prenom et une adresse (décomposée)
+	*
+	* @param string $nom nom du client
+	* @param string $mdp mot de passe du client
+	* @return boolean Resultat de l'insertion
+	*/
+	public function creerAdmin($nom,$mdp) {
+		$pwd = password_hash( $mdp, PASSWORD_DEFAULT );
+			
+		$ch = "INSERT INTO administrateur (nom,mdp) VALUES ('$nom','$pwd')";
+		
+		$req = PdoGsbParam::$monPdo->prepare($ch);
+		return $req->execute();		
 	}
 
 
@@ -230,18 +248,37 @@ class PdoGsbParam {
 	* Retourne les informations d'un client
 	*
 	* @param string $mail le mail du client souhaité
-	* @return array $userInfo les informations du client
+	* @return array/boolean $userInfo Les informations du client sinon false
 	*/
 	public function getInfoClient($mail)
 	{
+		$exec = false;
 		$res = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mail = '$mail'");
 		$userInfo = $res->fetch();
 
 		if(isset($userInfo)){
-			return $userInfo;
-		} else {
-			return 1;
+			$exec = $userInfo;
 		}
+
+		return $exec;
+	}
+
+	/**
+	* Retourne les informations d'un administrateur
+	*
+	* @param string $nom l'identifiant de l'administrateur souhaité
+	* @return array/boolean $userInfo Les informations de l'administrateur sinon false
+	*/
+	public function getInfoAdmin($nom){
+		$exec = false;
+		$res = PdoGsbParam::$monPdo->query("SELECT * FROM administrateur WHERE nom = '$nom'");
+		$userInfo = $res->fetch();
+
+		if(isset($userInfo)){
+			$exec = $userInfo;
+		}
+
+		return $exec;
 	}
 
 	/**
@@ -254,30 +291,35 @@ class PdoGsbParam {
 	public function connexionUtilisateur($mail, $mdp)
 	{
 		$req = PdoGsbParam::$monPdo->query("SELECT * FROM client WHERE mail='$mail';");
-		$userInfo = $req->fetch();
-		
 		$req2 = PdoGsbParam::$monPdo->query("SELECT * FROM administrateur WHERE nom='$mail';");
-		$userInfo2 = $req2->fetch();
+		
+		if($req || $req2){
 
-		if($userInfo || $userInfo2){
+			$userInfo = $req->fetch();
+			$userInfo2 = $req2->fetch();
 
-			if($userInfo){
-				$mdpBDD = $userInfo['mdp'];
-			} else {
-				$mdpBDD = $userInfo2['mdp'];
-			}
+			if($userInfo || $userInfo2){
 
-			if (password_verify($mdp, $mdpBDD)){
-				$lesErreurs[] = null;
-				if($userInfo2){
-					$_SESSION['admin']=true;
+				if($userInfo){
+					$mdpBDD = $userInfo['mdp'];
+				} else {
+					$mdpBDD = $userInfo2['mdp'];
 				}
-			} else {
-				$lesErreurs[] = 'Mot de passe incorrect !';
-			}
 
+				if (password_verify($mdp, $mdpBDD)){
+					$lesErreurs[] = null;
+					if($userInfo2){
+						$_SESSION['admin']=true;
+					}
+				} else {
+					$lesErreurs[] = 'Mot de passe incorrect !';
+				}
+
+			} else {
+				$lesErreurs[] = 'Mel incorrect !';
+			}
 		} else {
-			$lesErreurs[] = 'Mel incorrect !';
+			$lesErreur[] = "Erreur...";
 		}
 		return $lesErreurs;
 	}

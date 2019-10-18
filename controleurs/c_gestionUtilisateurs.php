@@ -71,32 +71,38 @@ switch($action){
 			$cp = $_REQUEST['cp'];
 			$mail = $_REQUEST['mail'];
 
-			$nom = addcslashes($nom);
-			$prenom = addcslashes($prenom);
-			$rue = addcslashes($rue);
-			$ville = addcslashes($ville);
-			$cp = addcslashes($cp);
-			$mail = addcslashes($mail);
+			$nom = addslashes($nom);
+			$prenom = addslashes($prenom);
+			$rue = addslashes($rue);
+			$ville = addslashes($ville);
+			$cp = addslashes($cp);
+			$mail = addslashes($mail);
 		}
+
 	 	$msgErreurs = getErreursSaisieCommande($nom,$prenom,$rue,$ville,$cp,$mail);
-		if (count($msgErreurs)!=0)
-		{
+		if (count($msgErreurs)!=0){
 			include ("vues/v_erreurs.php");
 			include ("vues/v_inscription.php");
-		}
-		else
-		{
-			if($pdo->creerClient($mail,$_REQUEST['mdp'],$nom,$prenom,$rue,$cp,$ville)){
-				$_SESSION['mail']=$mail;
-				$message = "Vous êtes bien inscris et connectez. A l'avenir votre identifiant sera ".$mail." .";
-				include("vues/v_message.php");
-				include("vues/v_accueil.php");
+		} else {
+			if($pdo->getInfoClient($nom)==false && $pdo->getInfoAdmin($nom)==false){
+				if($pdo->creerClient($mail,$_REQUEST['mdp'],$nom,$prenom,$rue,$cp,$ville)){
+					$_SESSION['mail']=$mail;
+					$message = "Vous êtes bien inscris et connectez. A l'avenir votre identifiant sera : ".$_REQUEST['mail']." !";
+					include("vues/v_message.php");
+					include("vues/v_accueil.php");
+				}
 			} else {
 				$msgErreurs[]='Cette adresse mel est déjà utilisée...';
 				include ("vues/v_erreurs.php");
 				include ("vues/v_inscription.php");
 			}
 		}
+		break;
+	}
+
+	
+	default : {
+		header('Location:?uc=utilisateur&action=inscription');
 		break;
 	}
 

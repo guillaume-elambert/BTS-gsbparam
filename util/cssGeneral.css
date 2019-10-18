@@ -23,15 +23,16 @@ fieldset {
 label {
 	background:transparent none;
 	display: block;
-	width: 20%;
+	width: 30%;
 	float: left;
-	padding-right: 1%;
+	padding-left: 2%;
+	padding-right: 2%;
 	text-align: left;
 }
 
 input, select {
 	margin-left: 1%;
-	width: 30%;
+	width: 40%;
 	border: #CCC 1px solid;
 }
 

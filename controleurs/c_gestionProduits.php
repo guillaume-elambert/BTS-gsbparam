@@ -10,6 +10,7 @@ if(isset($_SESSION['mail'])){
 				case 'voirProduits' : {
 					$lesCategories = $pdo->getLesCategories();
 					$lesCategories[] = array("id"=>"ajoutProd","libelle"=>"Ajouter un produit");
+					$lesCategories[] = array("id"=>"ajoutAdmin","libelle"=>"Ajouter un administrateur");
 					include("vues/v_categories.php");
 			  		$categorie = $_REQUEST['categorie'];
 					$lesProduits = $pdo->getLesProduitsDeCategorie($categorie);
@@ -84,6 +85,7 @@ if(isset($_SESSION['mail'])){
 						//Affichage du la page d'administration
 						$lesCategories = $pdo->getLesCategories();
 						$lesCategories[] = array("id"=>"ajoutProd","libelle"=>"Ajouter un produit");
+						$lesCategories[] = array("id"=>"ajoutAdmin","libelle"=>"Ajouter un administrateur");
 						include("vues/v_categories.php");
 						
 
@@ -132,6 +134,7 @@ if(isset($_SESSION['mail'])){
 					//Affichage du la page d'administration
 					$lesCategories = $pdo->getLesCategories();
 					$lesCategories[] = array("id"=>"ajoutProd","libelle"=>"Ajouter un produit");
+					$lesCategories[] = array("id"=>"ajoutAdmin","libelle"=>"Ajouter un administrateur");
 					include("vues/v_categories.php");
 					
 
@@ -150,8 +153,13 @@ if(isset($_SESSION['mail'])){
 					$id="";
 					$description="";
 					$prix=0;
-					$categorie="C1";
 					$lesCategories = $pdo->getLesCategories();
+					
+					if(isset($_REQUEST['categorie'])){
+						$categorie = $_REQUEST['categorie'];
+					} else {
+						$categorie = $lesCategories[0]['id'];
+					}
 
 					include("vues/v_ajoutProduit.php");
 					break;
@@ -173,6 +181,7 @@ if(isset($_SESSION['mail'])){
 
 								$lesCategories = $pdo->getLesCategories();
 								$lesCategories[] = array("id"=>"ajoutProd","libelle"=>"Ajouter un produit");
+								$lesCategories[] = array("id"=>"ajoutAdmin","libelle"=>"Ajouter un administrateur");
 								
 								include("vues/v_categories.php");
 								
@@ -202,11 +211,51 @@ if(isset($_SESSION['mail'])){
 					break;
 				}
 
+				case 'ajoutAdmin' : {
+					$nom ='';
+					include("vues/v_inscriptionAdmin.php");
+					break;
+				}
+
+				case 'confirmerInscriptionAdmin' : {
+					if( isset($_REQUEST['nom']) ) {
+						$nom = $_REQUEST['nom'];
+						$nom = addslashes($nom);
+						
+						if($pdo->getInfoClient($nom)==false && $pdo->getInfoAdmin($nom)==false){
+							
+							if($pdo->creerAdmin($nom,$_REQUEST['mdp'])){
+								$message = "L'administrateur a été créé avec l'identifiant : ".$_REQUEST['nom']." et le mot de passe : ".$_REQUEST['mdp']." !";
+								include("vues/v_message.php");
+								include("vues/v_accueil.php");
+							}
+						} else {
+							$msgErreurs[]='Ce login est déjà utilisé...';
+							include ("vues/v_erreurs.php");
+							include ("vues/v_inscriptionAdmin.php");
+						}
+
+					} else {
+						$msgErreurs[]='Veuillez saisir un identifiant...';
+						include ("vues/v_erreurs.php");
+						include ("vues/v_inscription.php");
+					} 
+
+					
+					break;
+				}
+
+				default : {
+					header('Location:?uc=administrer');
+					break;
+				}
 			}
 
 		} else {
 			$lesCategories = $pdo->getLesCategories();
 			$lesCategories[] = array("id"=>"ajoutProd","libelle"=>"Ajouter un produit");
+			$lesCategories[] = array("id"=>"ajoutAdmin","libelle"=>"Ajouter un administrateur");
+
 			include("vues/v_categories.php");
 			
 

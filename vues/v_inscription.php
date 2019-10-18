@@ -1,4 +1,4 @@
-<div id="creationCommande">
+<div id="inscriptionClient">
 <form method="POST" action="?uc=utilisateur&action=confirmerInscription">
    <fieldset>
      <legend>Inscription</legend>

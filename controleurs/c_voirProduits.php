@@ -36,7 +36,7 @@ if(isset($_SESSION['admin'])){
 				include("vues/v_produitsDeCategorie.php");
 
 			}
-			//var_dump($lesProduits);
+			
 			break;
 		}
 
@@ -72,6 +72,12 @@ if(isset($_SESSION['admin'])){
 			else 
 				header('Location:index.php?uc=voirProduits&action=nosProduits');
 			}
+			break;
+		}
+
+
+		default : {
+			header('Location:?uc=voirProduits&action=nosProduits');
 			break;
 		}
 	}

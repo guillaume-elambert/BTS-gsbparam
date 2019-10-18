@@ -1,6 +1,4 @@
-<div id="accueil">
-
-	<?php 
+<?php 
 	if(isset($_REQUEST['message'])){
 		$message=$_REQUEST['message'];
 		include("vues/v_message.php");
@@ -8,7 +6,9 @@
 		$msgErreurs[] = $_REQUEST['erreur'];
 		include ("vues/v_erreurs.php");
 	}
-	?>
+?>
+
+<div id="accueil">
 
 	<h1 id="TitreAcc">La société GsbPara,</h1>
 
@@ -25,4 +25,8 @@
 	<h2>Liste des uilisateurs :</h2>
 	<p>guillaume.elambert@yahoo.fr:root -> client</p>
 	<p>root:root -> administrateur</p>
+
+	<br/><br/>
+	<h2>Utilisateur BDD :</h2>
+	<p>visiteurSite:a5UTXhjsMreUpAJU</p>
 </div>

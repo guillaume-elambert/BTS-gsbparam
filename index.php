@@ -15,6 +15,7 @@ else {
 
 $pdo = PdoGsbParam::getPdoGsbParam();
 
+
 switch($uc)
 {
 	case 'accueil': {
@@ -39,6 +40,11 @@ switch($uc)
 
 	case 'utilisateur' : {
 		include("controleurs/c_gestionUtilisateurs.php");
+		break;
+	}
+
+	default : {
+		header('Location:?');
 		break;
 	}
 }

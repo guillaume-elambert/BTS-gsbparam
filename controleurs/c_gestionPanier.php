@@ -3,8 +3,8 @@ if(isset($_SESSION['admin'])){
 	header('Location: ./');
 } else {
 	$action = $_REQUEST['action'];
-	switch($action)
-	{
+	
+	switch($action) {
 
 
 		case 'voirPanier':
@@ -104,8 +104,7 @@ if(isset($_SESSION['admin'])){
 
 
 
-		case 'confirmerCommande' :
-		{
+		case 'confirmerCommande' : {
 			$nom =$_REQUEST['nom']; $prenom=$_REQUEST['prenom']; $rue=$_REQUEST['rue'];$ville =$_REQUEST['ville'];$cp=$_REQUEST['cp'];$mail=$_REQUEST['mail'];
 		 	$msgErreurs = getErreursSaisieCommande($nom,$prenom,$rue,$ville,$cp,$mail);
 			if (count($msgErreurs)!=0)
@@ -122,6 +121,11 @@ if(isset($_SESSION['admin'])){
 				supprimerPanier();
 				include ("vues/v_message.php");
 			}
+			break;
+		}
+
+		default : {
+			header('Location:?uc=gererPanier&action=voirPanier');
 			break;
 		}
 	}

@@ -1,11 +1,13 @@
+
 -- phpMyAdmin SQL Dump
 -- version 4.5.4.1
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost
--- Généré le :  Jeu 17 Octobre 2019 à 18:33
+-- Généré le :  Ven 18 Octobre 2019 à 12:09
 -- Version du serveur :  5.7.11
 -- Version de PHP :  5.6.18
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -20,41 +22,51 @@ SET time_zone = "+00:00";
 -- Base de données :  `elambert_gsbparam`
 --
 
+DROP DATABASE IF EXISTS `elambert_gsbparam`;
+CREATE DATABASE `elambert_gsbparam`;
+
+--
+-- Utilisateur pour la base de données : `elambert_gsbparam`
+--
+DROP USER IF EXISTS 'visiteurSite'@'localhost';
+CREATE USER 'visiteurSite'@'localhost' IDENTIFIED BY 'a5UTXhjsMreUpAJU';
+GRANT ALL PRIVILEGES ON `elambert_gsbparam`.* TO 'visiteurSite'@'localhost';
+
 -- --------------------------------------------------------
 
 --
--- Structure de la table `administrateur`
+-- Structure de la TABLE `elambert_gsbparam`.`administrateur`
 --
 
-CREATE TABLE `administrateur` (
-  `id` char(3) COLLATE latin1_bin NOT NULL,
+CREATE TABLE `elambert_gsbparam`.`administrateur` (
   `nom` char(32) COLLATE latin1_bin NOT NULL,
   `mdp` char(255) COLLATE latin1_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 --
--- Contenu de la table `administrateur`
+-- Contenu de la TABLE `elambert_gsbparam`.`administrateur`
 --
 
-INSERT INTO `administrateur` (`id`, `nom`, `mdp`) VALUES
-('1', 'root', '$2y$10$vd3tGpa182f5ZzKy.2FaIORZ9wDktPzrQyAYJerkgOxOYhfCOwhO2');
+INSERT INTO `elambert_gsbparam`.`administrateur` (`nom`, `mdp`) VALUES
+('root1', 'root'),
+('root', '$2y$10$vd3tGpa182f5ZzKy.2FaIORZ9wDktPzrQyAYJerkgOxOYhfCOwhO2');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `categorie`
+-- Structure de la TABLE `elambert_gsbparam`.`categorie`
 --
 
-CREATE TABLE `categorie` (
+CREATE TABLE `elambert_gsbparam`.`categorie` (
   `id` char(32) COLLATE utf8_bin NOT NULL,
   `libelle` char(32) COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Contenu de la table `categorie`
+-- Contenu de la TABLE `elambert_gsbparam`.`categorie`
 --
 
-INSERT INTO `categorie` (`id`, `libelle`) VALUES
+INSERT INTO `elambert_gsbparam`.`categorie` (`id`, `libelle`) VALUES
 ('CH', 'Cheveux'),
 ('FO', 'Forme'),
 ('PS', 'Protection Solaire');
@@ -62,10 +74,10 @@ INSERT INTO `categorie` (`id`, `libelle`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `client`
+-- Structure de la TABLE `elambert_gsbparam`.`client`
 --
 
-CREATE TABLE `client` (
+CREATE TABLE `elambert_gsbparam`.`client` (
   `mail` varchar(90) COLLATE utf8_bin NOT NULL,
   `mdp` varchar(255) COLLATE utf8_bin NOT NULL,
   `nom` varchar(30) COLLATE utf8_bin DEFAULT NULL,
@@ -76,10 +88,10 @@ CREATE TABLE `client` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Contenu de la table `client`
+-- Contenu de la TABLE `elambert_gsbparam`.`client`
 --
 
-INSERT INTO `client` (`mail`, `mdp`, `nom`, `prenom`, `rue`, `cp`, `ville`) VALUES
+INSERT INTO `elambert_gsbparam`.`client` (`mail`, `mdp`, `nom`, `prenom`, `rue`, `cp`, `ville`) VALUES
 ('dupont@wanadoo.fr', '$2y$10$C099mWcA2WqRaQuLVCiH.OEQW5rJonwEn7RjxwYGkEWnHzY62cy3C', 'Dupont', 'Jacques', '12, rue haute', '75001', 'Paris'),
 ('durant@free.fr', '$2y$10$C099mWcA2WqRaQuLVCiH.OEQW5rJonwEn7RjxwYGkEWnHzY62cy3C', 'Durant', 'Yves', '23, rue des ombres', '75012', 'Paris'),
 ('guillaume.elambert@yahoo.fr', '$2y$10$C099mWcA2WqRaQuLVCiH.OEQW5rJonwEn7RjxwYGkEWnHzY62cy3C', 'Elambert', 'Guillaume', '8 bis rue de Saint Benoit', '78610', 'Auffargis');
@@ -87,10 +99,10 @@ INSERT INTO `client` (`mail`, `mdp`, `nom`, `prenom`, `rue`, `cp`, `ville`) VALU
 -- --------------------------------------------------------
 
 --
--- Structure de la table `commande`
+-- Structure de la TABLE `elambert_gsbparam`.`commande`
 --
 
-CREATE TABLE `commande` (
+CREATE TABLE `elambert_gsbparam`.`commande` (
   `id` char(32) COLLATE utf8_bin NOT NULL,
   `dateCommande` date DEFAULT NULL,
   `mailClient` varchar(90) COLLATE utf8_bin NOT NULL,
@@ -102,10 +114,10 @@ CREATE TABLE `commande` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Contenu de la table `commande`
+-- Contenu de la TABLE `elambert_gsbparam`.`commande`
 --
 
-INSERT INTO `commande` (`id`, `dateCommande`, `mailClient`, `nomClient`, `prenomClient`, `rueClient`, `cpClient`, `villeClient`) VALUES
+INSERT INTO `elambert_gsbparam`.`commande` (`id`, `dateCommande`, `mailClient`, `nomClient`, `prenomClient`, `rueClient`, `cpClient`, `villeClient`) VALUES
 ('1101461660', '2011-07-12', 'dupont@wanadoo.fr', '', '', '', '', ''),
 ('1101461665', '2011-07-20', 'durant@free.fr', '', '', '', '', ''),
 ('1101461666', '2019-09-24', 'guillaume.elambert@yahoo.fr', '', '', '', '', '');
@@ -113,10 +125,10 @@ INSERT INTO `commande` (`id`, `dateCommande`, `mailClient`, `nomClient`, `prenom
 -- --------------------------------------------------------
 
 --
--- Structure de la table `contenir`
+-- Structure de la TABLE `elambert_gsbparam`.`contenir`
 --
 
-CREATE TABLE `contenir` (
+CREATE TABLE `elambert_gsbparam`.`contenir` (
   `idCommande` char(32) COLLATE utf8_bin NOT NULL,
   `idProduit` char(32) COLLATE utf8_bin NOT NULL,
   `qte` int(11) NOT NULL DEFAULT '1'
@@ -125,10 +137,10 @@ CREATE TABLE `contenir` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `panier_client`
+-- Structure de la TABLE `elambert_gsbparam`.`panier_client`
 --
 
-CREATE TABLE `panier_client` (
+CREATE TABLE `elambert_gsbparam`.`panier_client` (
   `mailClient` varchar(90) COLLATE utf8_bin NOT NULL,
   `produit` char(32) COLLATE utf8_bin NOT NULL,
   `qte` int(11) NOT NULL
@@ -137,10 +149,10 @@ CREATE TABLE `panier_client` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `produit`
+-- Structure de la TABLE `elambert_gsbparam`.`produit`
 --
 
-CREATE TABLE `produit` (
+CREATE TABLE `elambert_gsbparam`.`produit` (
   `id` char(32) COLLATE utf8_bin NOT NULL,
   `description` char(50) COLLATE utf8_bin DEFAULT NULL,
   `prix` decimal(10,2) DEFAULT NULL,
@@ -149,10 +161,10 @@ CREATE TABLE `produit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Contenu de la table `produit`
+-- Contenu de la TABLE `elambert_gsbparam`.`produit`
 --
 
-INSERT INTO `produit` (`id`, `description`, `prix`, `image`, `idCategorie`) VALUES
+INSERT INTO `elambert_gsbparam`.`produit` (`id`, `description`, `prix`, `image`, `idCategorie`) VALUES
 ('c01', 'Laino Shampooing Douche au Thé Vert BIO', '4.00', 'images/laino-shampooing-douche-au-the-vert-bio-200ml.png', 'CH'),
 ('c02', 'Klorane shampoo', '12.00', 'images/klorane-fibres-de-lin-baume-apres-shampooing-150-ml.jpg', 'CH'),
 ('c03', 'Weleda Kids 2in1 Shower & Shampoo Orange fruitée', '4.00', 'images/weleda-kids-2in1-shower-shampoo-orange-fruitee-150-ml.jpg', 'CH'),
@@ -178,10 +190,10 @@ INSERT INTO `produit` (`id`, `description`, `prix`, `image`, `idCategorie`) VALU
 -- --------------------------------------------------------
 
 --
--- Structure de la table `promotion`
+-- Structure de la TABLE `elambert_gsbparam`.`promotion`
 --
 
-CREATE TABLE `promotion` (
+CREATE TABLE `elambert_gsbparam`.`promotion` (
   `idProduit` char(32) COLLATE utf8_bin NOT NULL,
   `dateDebut` date NOT NULL,
   `dateFin` date NOT NULL,
@@ -193,91 +205,88 @@ CREATE TABLE `promotion` (
 --
 
 --
--- Index pour la table `administrateur`
+-- Index pour la TABLE `elambert_gsbparam`.`administrateur`
 --
-ALTER TABLE `administrateur`
+ALTER TABLE `elambert_gsbparam`.`administrateur`
+  ADD PRIMARY KEY (`nom`);
+
+--
+-- Index pour la TABLE `elambert_gsbparam`.`categorie`
+--
+ALTER TABLE `elambert_gsbparam`.`categorie`
   ADD PRIMARY KEY (`id`);
 
 --
--- Index pour la table `categorie`
+-- Index pour la TABLE `elambert_gsbparam`.`client`
 --
-ALTER TABLE `categorie`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `client`
---
-ALTER TABLE `client`
+ALTER TABLE `elambert_gsbparam`.`client`
   ADD PRIMARY KEY (`mail`);
 
 --
--- Index pour la table `commande`
+-- Index pour la TABLE `elambert_gsbparam`.`commande`
 --
-ALTER TABLE `commande`
+ALTER TABLE `elambert_gsbparam`.`commande`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FK_client_commande_mail` (`mailClient`);
 
 --
--- Index pour la table `contenir`
+-- Index pour la TABLE `elambert_gsbparam`.`contenir`
 --
-ALTER TABLE `contenir`
+ALTER TABLE `elambert_gsbparam`.`contenir`
   ADD PRIMARY KEY (`idCommande`,`idProduit`),
   ADD KEY `I_FK_CONTENIR_COMMANDE` (`idCommande`),
   ADD KEY `I_FK_CONTENIR_Produit` (`idProduit`);
 
 --
--- Index pour la table `panier_client`
+-- Index pour la TABLE `elambert_gsbparam`.`panier_client`
 --
-ALTER TABLE `panier_client`
+ALTER TABLE `elambert_gsbparam`.`panier_client`
   ADD PRIMARY KEY (`produit`),
   ADD KEY `FK_client_panierClient_mailClient` (`mailClient`);
 
 --
--- Index pour la table `produit`
+-- Index pour la TABLE `elambert_gsbparam`.`produit`
 --
-ALTER TABLE `produit`
+ALTER TABLE `elambert_gsbparam`.`produit`
   ADD PRIMARY KEY (`id`),
   ADD KEY `I_FK_Produit_CATEGORIE` (`idCategorie`);
 
 --
--- Index pour la table `promotion`
+-- Index pour la TABLE `elambert_gsbparam`.`promotion`
 --
-ALTER TABLE `promotion`
+ALTER TABLE `elambert_gsbparam`.`promotion`
   ADD PRIMARY KEY (`idProduit`,`dateDebut`);
+
 
 --
 -- Contraintes pour les tables exportées
 --
 
 --
--- Contraintes pour la table `commande`
+-- Contraintes pour la TABLE `elambert_gsbparam`.`commande`
 --
-ALTER TABLE `commande`
-  ADD CONSTRAINT `FK_client_commande_mail` FOREIGN KEY (`mailClient`) REFERENCES `client` (`mail`);
+ALTER TABLE `elambert_gsbparam`.`commande`
+  ADD CONSTRAINT `FK_client_commande_mail` FOREIGN KEY (`mailClient`) REFERENCES `elambert_gsbparam`.`client` (`mail`);
 
 --
--- Contraintes pour la table `contenir`
+-- Contraintes pour la TABLE `elambert_gsbparam`.`contenir`
 --
-ALTER TABLE `contenir`
-  ADD CONSTRAINT `contenir_ibfk_1` FOREIGN KEY (`idCommande`) REFERENCES `commande` (`id`),
-  ADD CONSTRAINT `contenir_ibfk_2` FOREIGN KEY (`idProduit`) REFERENCES `produit` (`id`);
+ALTER TABLE `elambert_gsbparam`.`contenir`
+  ADD CONSTRAINT `contenir_ibfk_1` FOREIGN KEY (`idCommande`) REFERENCES `elambert_gsbparam`.`commande` (`id`),
+  ADD CONSTRAINT `contenir_ibfk_2` FOREIGN KEY (`idProduit`) REFERENCES `elambert_gsbparam`.`produit` (`id`);
 
 --
--- Contraintes pour la table `produit`
+-- Contraintes pour la TABLE `elambert_gsbparam`.`produit`
 --
-ALTER TABLE `produit`
-  ADD CONSTRAINT `produit_ibfk_1` FOREIGN KEY (`idCategorie`) REFERENCES `categorie` (`id`);
+ALTER TABLE `elambert_gsbparam`.`produit`
+  ADD CONSTRAINT `produit_ibfk_1` FOREIGN KEY (`idCategorie`) REFERENCES `elambert_gsbparam`.`categorie` (`id`);
 
 --
--- Contraintes pour la table `promotion`
+-- Contraintes pour la TABLE `elambert_gsbparam`.`promotion`
 --
-ALTER TABLE `promotion`
-  ADD CONSTRAINT `FK_idProduit_produit_promotion` FOREIGN KEY (`idProduit`) REFERENCES `produit` (`id`);
+ALTER TABLE `elambert_gsbparam`.`promotion`
+  ADD CONSTRAINT `FK_idProduit_produit_promotion` FOREIGN KEY (`idProduit`) REFERENCES `elambert_gsbparam`.`produit` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-DROP USER IF EXISTS 'visiteurSite'@'localhost';
-CREATE USER 'visiteurSite'@'localhost' IDENTIFIED BY 'a5UTXhjsMreUpAJU';
-GRANT ALL PRIVILEGES ON `elambert_gsbparam`.* TO 'visiteurSite'@'localhost';
