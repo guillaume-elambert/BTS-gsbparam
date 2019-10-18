@@ -48,7 +48,6 @@ CREATE TABLE `elambert_gsbparam`.`administrateur` (
 --
 
 INSERT INTO `elambert_gsbparam`.`administrateur` (`nom`, `mdp`) VALUES
-('root1', 'root'),
 ('root', '$2y$10$vd3tGpa182f5ZzKy.2FaIORZ9wDktPzrQyAYJerkgOxOYhfCOwhO2');
 
 -- --------------------------------------------------------
